@@ -1,11 +1,11 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const authMiddleware = require("../middleware/auth");
-const {
+import {
   createTicket,
   getTickets,
   updateTicket,
-} = require("../controllers/ticketController");
+} from "../controllers/ticketController.js";
+import authMiddleware from "../middleware/auth.js";
 
 router.post("/", authMiddleware, createTicket);
 
@@ -13,4 +13,4 @@ router.get("/", authMiddleware, getTickets);
 
 router.put("/:id", authMiddleware, updateTicket);
 
-module.exports = router;
+export default router;

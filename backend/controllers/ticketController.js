@@ -1,4 +1,4 @@
-const Ticket = require("../models/Ticket");
+import Ticket from "../models/Ticket.js";
 
 export async function getTickets(req, res) {
   const tickets =
