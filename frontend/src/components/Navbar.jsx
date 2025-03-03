@@ -27,14 +27,12 @@ class Navbar extends Component {
     const { isAuthenticated, userRole, isMenuOpen } = this.state;
 
     return (
-      <nav className="bg-gray-900 text-white shadow-lg">
+      <nav className="bg-gray-900 text-white shadow-lg border-b-amber-100">
         <div className="container mx-auto flex justify-between items-center p-4">
-          {/* Logo */}
           <Link to="/" className="text-2xl font-bold text-blue-400">
             Ticketing System
           </Link>
 
-          {/* Desktop Menu */}
           <ul className="hidden md:flex space-x-6 text-lg">
             {!isAuthenticated ? (
               <>
@@ -83,7 +81,6 @@ class Navbar extends Component {
             )}
           </ul>
 
-          {/* Mobile Menu Button */}
           <button
             className="md:hidden focus:outline-none"
             onClick={this.toggleMenu}
@@ -96,7 +93,6 @@ class Navbar extends Component {
           </button>
         </div>
 
-        {/* Mobile Dropdown Menu */}
         {isMenuOpen && (
           <div className="md:hidden bg-gray-800 p-4">
             <ul className="flex flex-col space-y-4 text-center">

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { AuthContext } from "../AuthContext";
+import { AuthContext } from "../context/AuthContext";
 import { Link, Navigate } from "react-router-dom";
 
 class Signup extends Component {
@@ -8,7 +8,7 @@ class Signup extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: "",
+      username: "",
       email: "",
       password: "",
       role: "user",
@@ -23,15 +23,15 @@ class Signup extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
+    const { username, email, password, role } = this.state;
 
-    const { name, email, password, role } = this.state;
     try {
-      const response = await fetch("http://localhost:5000/signup", {
+      const response = await fetch("http://localhost:5000/api/auth/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, email, password, role }),
+        body: JSON.stringify({ username, email, password, role }),
       });
 
       const data = await response.json();
@@ -40,10 +40,10 @@ class Signup extends Component {
         this.context.login(data.token, data.role);
         this.setState({ redirect: true });
       } else {
-        this.setState({ error: data.message });
+        this.setState({ error: data.message || "Signup failed. Try again." });
       }
     } catch (error) {
-      this.setState({ error: "Signup failed. Try again." });
+      this.setState({ error: "Signup failed. Please try again later." });
     }
   };
 
@@ -58,17 +58,19 @@ class Signup extends Component {
           <h2 className="text-2xl font-bold mb-4 text-center">Sign Up</h2>
 
           {this.state.error && (
-            <p className="text-red-400 text-sm">{this.state.error}</p>
+            <p className="text-red-400 text-sm text-center">
+              {this.state.error}
+            </p>
           )}
 
           <form onSubmit={this.handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm">Full Name</label>
+              <label className="block text-sm">Username</label>
               <input
                 type="text"
-                name="name"
+                name="username"
                 className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={this.state.name}
+                value={this.state.username}
                 onChange={this.handleChange}
                 required
               />

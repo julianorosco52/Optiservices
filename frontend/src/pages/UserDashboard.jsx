@@ -1,41 +1,91 @@
 import React, { Component } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 class UserDashboard extends Component {
-  state = { tickets: [] };
+  state = { tickets: [], isLoading: true, error: null };
 
-  componentDidMount() {
+  async componentDidMount() {
     const token = localStorage.getItem("token");
-    axios
-      .get("/api/tickets", { headers: { Authorization: `Bearer ${token}` } })
-      .then((res) => this.setState({ tickets: res.data }))
-      .catch((err) => console.error(err));
+    if (!token) {
+      this.setState({ isLoading: false, error: "User not authenticated." });
+      return;
+    }
+
+    try {
+      const res = await axios.get("http://localhost:5000/api/tickets", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const tickets = Array.isArray(res.data) ? res.data : [];
+      this.setState({ tickets, isLoading: false });
+    } catch (err) {
+      console.error("Error fetching tickets:", err);
+      this.setState({
+        isLoading: false,
+        error: "Failed to load tickets. Please try again.",
+      });
+    }
   }
 
   render() {
+    const { tickets, isLoading, error } = this.state;
+
     return (
-      <div className="p-8">
-        <h1 className="text-2xl font-bold">My Tickets</h1>
-        {this.state.tickets.length > 0 ? (
-          this.state.tickets.map((ticket) => (
-            <div
-              key={ticket._id}
-              className="p-4 my-4 bg-gray-100 rounded-lg shadow"
-            >
-              <h2 className="font-semibold">{ticket.title}</h2>
-              <p>{ticket.description}</p>
-              <span
-                className={`px-2 py-1 rounded text-white ${
-                  ticket.status === "Open" ? "bg-green-500" : "bg-gray-500"
-                }`}
-              >
-                {ticket.status}
-              </span>
-            </div>
-          ))
-        ) : (
-          <p>No tickets found.</p>
+      <div className="min-h-screen bg-gray-900 text-white p-8">
+        <h1 className="text-3xl font-bold text-center mb-6">🎟️ My Tickets</h1>
+
+        {isLoading && (
+          <div className="flex justify-center items-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-4 border-blue-500"></div>
+          </div>
         )}
+
+        {error && (
+          <p className="text-center bg-red-600 text-white p-3 rounded-lg shadow">
+            {error}
+          </p>
+        )}
+
+        {tickets.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {tickets.map((ticket) => (
+              <div
+                key={ticket._id}
+                className="p-5 bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition-shadow"
+              >
+                <h2 className="text-lg font-semibold text-blue-400">
+                  {ticket.title}
+                </h2>
+                <p className="text-gray-300 mt-2">{ticket.description}</p>
+                <div className="mt-4 flex justify-between items-center">
+                  <span
+                    className={`px-3 py-1 text-sm font-semibold rounded ${
+                      ticket.status === "Open" ? "bg-green-500" : "bg-gray-600"
+                    }`}
+                  >
+                    {ticket.status}
+                  </span>
+                  <button className="text-sm text-gray-400 hover:text-gray-200">
+                    View Details →
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          !isLoading && (
+            <p className="text-center text-gray-400">No tickets found.</p>
+          )
+        )}
+
+        <div className="mt-8 text-center">
+          <Link to="/create-ticket">
+            <button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg text-lg font-semibold transition-all shadow-md hover:shadow-lg">
+              + Create Ticket
+            </button>
+          </Link>
+        </div>
       </div>
     );
   }
