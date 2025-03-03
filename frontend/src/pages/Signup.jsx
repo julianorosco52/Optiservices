@@ -1,10 +1,7 @@
 import React, { Component } from "react";
-import { AuthContext } from "../context/AuthContext";
 import { Link, Navigate } from "react-router-dom";
 
 class Signup extends Component {
-  static contextType = AuthContext;
-
   constructor(props) {
     super(props);
     this.state = {
@@ -13,7 +10,8 @@ class Signup extends Component {
       password: "",
       role: "user",
       error: "",
-      redirect: false,
+      success: "",
+      redirectToLogin: false,
     };
   }
 
@@ -28,28 +26,52 @@ class Signup extends Component {
     try {
       const response = await fetch("http://localhost:5000/api/auth/signup", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, email, password, role }),
       });
 
       const data = await response.json();
+      console.log("Signup Response:", data);
 
       if (response.ok) {
-        this.context.login(data.token, data.role);
-        this.setState({ redirect: true });
+        this.setState({
+          success: "Signup successful! Redirecting to login...",
+          error: "",
+        });
+
+        setTimeout(() => {
+          this.setState({ redirectToLogin: true });
+        }, 2000);
       } else {
-        this.setState({ error: data.message || "Signup failed. Try again." });
+        if (data.code === 11000) {
+          if (data.keyPattern.username) {
+            this.setState({ error: "Username already exists!", success: "" });
+          } else if (data.keyPattern.email) {
+            this.setState({ error: "Email already in use!", success: "" });
+          } else {
+            this.setState({
+              error: "Duplicate entry. Please try a different value.",
+              success: "",
+            });
+          }
+        } else {
+          this.setState({
+            error: data.message || "Signup failed. Try again.",
+            success: "",
+          });
+        }
       }
     } catch (error) {
-      this.setState({ error: "Signup failed. Please try again later." });
+      this.setState({
+        error: "Signup failed. Please try again later.",
+        success: "",
+      });
     }
   };
 
   render() {
-    if (this.state.redirect) {
-      return <Navigate to="/dashboard" />;
+    if (this.state.redirectToLogin) {
+      return <Navigate to="/login" />;
     }
 
     return (
@@ -60,6 +82,12 @@ class Signup extends Component {
           {this.state.error && (
             <p className="text-red-400 text-sm text-center">
               {this.state.error}
+            </p>
+          )}
+
+          {this.state.success && (
+            <p className="text-green-400 text-sm text-center">
+              {this.state.success}
             </p>
           )}
 
