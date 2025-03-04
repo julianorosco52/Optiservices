@@ -29,3 +29,27 @@ export async function updateTicket(req, res) {
   res.json(ticket);
   console.log("Ticket updated");
 }
+
+export async function deleteTicket(req, res) {
+  try {
+    const ticket = await Ticket.findById(req.params.id);
+
+    if (!ticket) {
+      return res.status(404).json({ message: "Ticket not found" });
+    }
+
+    if (ticket.userId.toString() !== req.user.id) {
+      return res
+        .status(403)
+        .json({
+          message: "Unauthorized: You can only delete your own tickets",
+        });
+    }
+
+    await Ticket.findByIdAndDelete(req.params.id);
+    res.json({ message: "Ticket deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+}
