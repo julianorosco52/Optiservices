@@ -17,9 +17,12 @@ class UserDashboard extends Component {
     }
 
     try {
-      const res = await axios.get("http://localhost:5000/api/tickets", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await axios.get(
+        "https://role-based-ticketing-system-w2fw.onrender.com/api/tickets",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       const tickets = Array.isArray(res.data) ? res.data : [];
       this.setState({ tickets, isLoading: false });
@@ -40,9 +43,12 @@ class UserDashboard extends Component {
     }
 
     try {
-      await axios.delete(`http://localhost:5000/api/tickets/${ticketId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axios.delete(
+        `https://role-based-ticketing-system-w2fw.onrender.com/api/tickets/${ticketId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       // Remove deleted ticket from state
       this.setState((prevState) => ({

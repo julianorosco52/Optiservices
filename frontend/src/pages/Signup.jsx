@@ -24,11 +24,14 @@ class Signup extends Component {
     const { username, email, password, role } = this.state;
 
     try {
-      const response = await fetch("http://localhost:5000/api/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email, password, role }),
-      });
+      const response = await fetch(
+        "https://role-based-ticketing-system-w2fw.onrender.com/api/auth/signup",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, email, password, role }),
+        }
+      );
 
       const data = await response.json();
       console.log("Signup Response:", data);

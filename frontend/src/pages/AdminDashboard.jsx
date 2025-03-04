@@ -23,9 +23,12 @@ class AdminDashboard extends Component {
         return;
       }
 
-      const res = await axios.get("http://localhost:5000/api/tickets", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await axios.get(
+        "https://role-based-ticketing-system-w2fw.onrender.com/api/tickets",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       const tickets = Array.isArray(res.data) ? res.data : [];
       this.setState({ tickets, filteredTickets: tickets, isLoading: false });
@@ -38,7 +41,7 @@ class AdminDashboard extends Component {
     try {
       const token = localStorage.getItem("token");
       await axios.put(
-        `http://localhost:5000/api/tickets/${ticketId}`,
+        `https://role-based-ticketing-system-w2fw.onrender.com/api/tickets/${ticketId}`,
         { status: newStatus },
         { headers: { Authorization: `Bearer ${token}` } }
       );

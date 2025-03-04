@@ -33,7 +33,7 @@ class CreateTicket extends Component {
       }
 
       await axios.post(
-        "http://localhost:5000/api/tickets",
+        "https://role-based-ticketing-system-w2fw.onrender.com/api/tickets",
         { title, description },
         { headers: { Authorization: `Bearer ${token}` } }
       );
