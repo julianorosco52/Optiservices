@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 class Footer extends Component {
   render() {
     return (
-      <footer className="bg-gray-900 text-gray-300 py-6 border-t-amber-100">
+      <footer className="bg-gray-950 text-gray-300 py-6 border-t-amber-100">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="text-center md:text-left">
@@ -37,37 +37,35 @@ class Footer extends Component {
                     Signup
                   </Link>
                 </li>
-                <li>
-                  <Link
-                    to="/contact"
-                    className="hover:text-blue-400 transition"
-                  >
-                    Contact
-                  </Link>
-                </li>
               </ul>
             </div>
 
             <div className="mt-4 md:mt-0">
-              <h3 className="text-lg font-semibold text-gray-200">Follow Us</h3>
-              <div className="flex space-x-4 mt-2">
-                <a href="#" className="hover:text-blue-400 transition">
-                  <i className="fab fa-facebook-f"></i>
-                </a>
-                <a href="#" className="hover:text-blue-400 transition">
-                  <i className="fab fa-twitter"></i>
-                </a>
-                <a href="#" className="hover:text-blue-400 transition">
-                  <i className="fab fa-linkedin-in"></i>
-                </a>
-              </div>
+              <h3 className="text-lg font-semibold text-gray-200">Socials</h3>
+              <ul className="mt-2 space-y-2">
+                <li>
+                  <a
+                    href="https://github.com/Esam-jr"
+                    className="hover:text-gray-400 transition"
+                  >
+                    <i className="fab fa-github-g">Github</i>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://www.linkedin.com/in/esmael-sabir/"
+                    className="hover:text-blue-400 transition"
+                  >
+                    <i className="fab fa-linkedin-in">Linkedin</i>
+                  </a>
+                </li>
+              </ul>
             </div>
           </div>
 
           <div className="border-t border-gray-700 mt-6 pt-4 text-center text-sm">
             <p>
-              &copy; {new Date().getFullYear()} Ticketing System. All rights
-              reserved.
+              &copy; {new Date().getFullYear()} Ticketing System. By Esam-jr
             </p>
           </div>
         </div>
