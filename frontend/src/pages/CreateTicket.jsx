@@ -41,7 +41,7 @@ class CreateTicket extends Component {
       this.setState({
         title: "",
         description: "",
-        success: "Ticket created successfully!",
+        success: "Ticket created successfully!, Redirecting...",
         isSubmitting: false,
       });
 
