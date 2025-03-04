@@ -6,6 +6,10 @@ class UserDashboard extends Component {
   state = { tickets: [], isLoading: true, error: null };
 
   async componentDidMount() {
+    await this.fetchTickets();
+  }
+
+  fetchTickets = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
       this.setState({ isLoading: false, error: "User not authenticated." });
@@ -26,7 +30,29 @@ class UserDashboard extends Component {
         error: "Failed to load tickets. Please try again.",
       });
     }
-  }
+  };
+
+  handleDelete = async (ticketId) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("User not authenticated.");
+      return;
+    }
+
+    try {
+      await axios.delete(`http://localhost:5000/api/tickets/${ticketId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      // Remove deleted ticket from state
+      this.setState((prevState) => ({
+        tickets: prevState.tickets.filter((ticket) => ticket._id !== ticketId),
+      }));
+    } catch (err) {
+      console.error("Error deleting ticket:", err);
+      alert("Failed to delete ticket. Please try again.");
+    }
+  };
 
   render() {
     const { tickets, isLoading, error } = this.state;
@@ -58,7 +84,7 @@ class UserDashboard extends Component {
                   {ticket.title}
                 </h2>
                 <p className="text-gray-300 mt-2">{ticket.description}</p>
-                <div className="mt-4 flex justify-between items-center">
+                <div className="mt-4 flex justify-between items-center space-x-1">
                   <span
                     className={`px-3 py-1 text-sm font-semibold rounded ${
                       ticket.status === "Open" ? "bg-green-500" : "bg-gray-600"
@@ -66,8 +92,11 @@ class UserDashboard extends Component {
                   >
                     {ticket.status}
                   </span>
-                  <button className="text-sm text-gray-400 hover:text-gray-200">
-                    View Details →
+                  <button
+                    onClick={() => this.handleDelete(ticket._id)}
+                    className="mt-4 bg-red-500 hover:bg-red-700 text-white px-3 py-1 rounded-lg text-sm font-semibold transition-all shadow-md hover:shadow-lg"
+                  >
+                    🗑 Delete
                   </button>
                 </div>
               </div>
