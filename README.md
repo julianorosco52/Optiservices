@@ -1,6 +1,6 @@
 # 🎟️ Ticketing System
 
-![Ticketing System Home](frontend/public/ticketing-system.PNG)
+![Ticketing System Home](frontend/public/ticketing_system.PNG)
 
 ## 📌 About
 The **Ticketing System** is a full-stack web application designed to streamline corporate issue tracking. Users can **create, view, and manage tickets**, while administrators can **assign statuses and track analytics**. The system features authentication, role-based access, and an intuitive UI.
@@ -80,7 +80,7 @@ npm run dev
 ## 🎨 Screenshots
 | User Dashboard | Admin Dashboard |
 |---------------|----------------|
-| ![User Dashboard](frontend/public/user-dashboard.PNG) | ![Admin Dashboard](frontend/public/admin.PNG) |
+| ![User Dashboard](frontend/public/user_dashboard.PNG) | ![Admin Dashboard](frontend/public/admin.PNG) |
 
 ## 🤝 Contribution
 Contributions are welcome! Please follow these steps:
