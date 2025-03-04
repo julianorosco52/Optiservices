@@ -21,6 +21,7 @@ class AuthProvider extends Component {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
     this.setState({ isAuthenticated: false, userRole: null });
+    this.props.navigate("/"); // Redirect to home after logout
   };
 
   render() {

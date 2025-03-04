@@ -1,10 +1,10 @@
 import React, { Suspense, lazy, Component } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { AuthProvider } from "./context/AuthContext";
 import NavbarWrapper from "./utils/NavbarWrapper";
 import CreateTicketWrapper from "./utils/CreateTicketWrapper";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import AuthProviderWrapper from "./utils/AuthProviderWrapper";
 
 const Login = lazy(() => import("./pages/Login"));
 const Signup = lazy(() => import("./pages/Signup"));
@@ -15,8 +15,8 @@ const Home = lazy(() => import("./pages/Home"));
 class App extends Component {
   render() {
     return (
-      <AuthProvider>
-        <Router>
+      <Router>
+        <AuthProviderWrapper>
           <NavbarWrapper>
             <Navbar />
           </NavbarWrapper>
@@ -37,8 +37,8 @@ class App extends Component {
 
           {/* Footer */}
           <Footer />
-        </Router>
-      </AuthProvider>
+        </AuthProviderWrapper>
+      </Router>
     );
   }
 }
