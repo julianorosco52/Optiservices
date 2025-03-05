@@ -27,8 +27,11 @@ class Navbar extends Component {
           <nav className="bg-gray-900 text-white shadow-lg border-b-amber-100">
             <div className="container mx-auto flex justify-between items-center p-4">
               {!isAuthenticated && (
-                <Link to="/" className="text-2xl font-bold text-blue-400">
-                  Ticketing System
+                <Link
+                  to="/"
+                  className="text-2xl font-bold font-mono italic text-blue-400"
+                >
+                  RoleTix{" "}
                 </Link>
               )}
               {isAuthenticated && userRole === "user" && (
