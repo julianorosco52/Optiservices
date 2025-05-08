@@ -1,77 +1,159 @@
-import React, { Component } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
+import { Github, Twitter, Linkedin, Mail, Heart } from "lucide-react";
 
-class Footer extends Component {
-  render() {
-    return (
-      <footer className="bg-gray-950 text-gray-300 py-6 border-t-amber-100">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="text-center md:text-left">
-              <h2 className="text-2xl font-bold text-blue-400">
-                Ticketing System
-              </h2>
-              <p className="text-sm mt-2 max-w-md">
-                A role-based ticketing system where users can submit and track
-                tickets while admins manage them efficiently.
-              </p>
-            </div>
-
-            <div className="mt-4 md:mt-0">
-              <h3 className="text-lg font-semibold text-gray-200">
-                Quick Links
-              </h3>
-              <ul className="mt-2 space-y-2 text-center md:text-left">
-                <li>
-                  <Link to="/" className="hover:text-blue-400 transition">
-                    Home
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/login" className="hover:text-blue-400 transition">
-                    Login
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/signup" className="hover:text-blue-400 transition">
-                    Signup
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            <div className="mt-4 md:mt-0">
-              <h3 className="text-lg font-semibold text-gray-200">Socials</h3>
-              <ul className="mt-2 space-y-2">
-                <li>
-                  <a
-                    href="https://github.com/Esam-jr"
-                    className="hover:text-gray-400 transition"
-                  >
-                    <i className="fab fa-github-g">Github</i>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://www.linkedin.com/in/esmael-sabir/"
-                    className="hover:text-blue-400 transition"
-                  >
-                    <i className="fab fa-linkedin-in">Linkedin</i>
-                  </a>
-                </li>
-              </ul>
+const Footer = () => {
+  const currentYear = new Date().getFullYear();
+  
+  return (
+    <footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 mt-auto">
+      <div className="container-custom py-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          {/* Brand Column */}
+          <div className="space-y-4">
+            <Link to="/" className="flex items-center space-x-2">
+              <span className="text-xl font-bold text-gray-900 dark:text-white">
+                Role<span className="text-indigo-600 dark:text-indigo-400">Tix</span>
+              </span>
+            </Link>
+            <p className="text-gray-600 dark:text-gray-400 text-sm">
+              A modern ticketing system designed for efficient issue tracking and resolution.
+            </p>
+            <div className="flex space-x-4">
+              <a
+                href="https://github.com/Esam-jr"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+              >
+                <Github className="h-5 w-5" />
+              </a>
+              <a
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+              >
+                <Twitter className="h-5 w-5" />
+              </a>
+              <a
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+              >
+                <Linkedin className="h-5 w-5" />
+              </a>
             </div>
           </div>
 
-          <div className="border-t border-gray-700 mt-6 pt-4 text-center text-sm">
-            <p>
-              &copy; {new Date().getFullYear()} Ticketing System. By Esam-jr
-            </p>
+          {/* Resources Column */}
+          <div>
+            <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Resources</h3>
+            <ul className="space-y-3">
+              <li>
+                <Link
+                  to="/"
+                  className="text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 text-sm"
+                >
+                  Documentation
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/"
+                  className="text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 text-sm"
+                >
+                  API Reference
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/"
+                  className="text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 text-sm"
+                >
+                  Support
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Company Column */}
+          <div>
+            <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Company</h3>
+            <ul className="space-y-3">
+              <li>
+                <Link
+                  to="/"
+                  className="text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 text-sm"
+                >
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/"
+                  className="text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 text-sm"
+                >
+                  Careers
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/"
+                  className="text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 text-sm"
+                >
+                  Blog
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Contact Column */}
+          <div>
+            <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Contact</h3>
+            <ul className="space-y-3">
+              <li className="flex items-center space-x-2">
+                <Mail className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                <a
+                  href="mailto:contact@roletix.com"
+                  className="text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 text-sm"
+                >
+                  contact@roletix.com
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
-      </footer>
-    );
-  }
-}
+
+        <div className="border-t border-gray-200 dark:border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+          <p className="text-gray-600 dark:text-gray-400 text-sm">
+            &copy; {currentYear} RoleTix. All rights reserved.
+          </p>
+          <div className="flex space-x-6 mt-4 md:mt-0">
+            <Link
+              to="/"
+              className="text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 text-sm"
+            >
+              Privacy Policy
+            </Link>
+            <Link
+              to="/"
+              className="text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 text-sm"
+            >
+              Terms of Service
+            </Link>
+          </div>
+        </div>
+        
+        <div className="text-center mt-8 text-gray-500 dark:text-gray-400 text-sm flex items-center justify-center">
+          <span>Made with</span>
+          <Heart className="h-4 w-4 mx-1 text-red-500 fill-red-500" />
+          <span>by <a href="https://github.com/Esam-jr" className="text-indigo-600 dark:text-indigo-400 hover:underline">Esamel Sabir</a></span>
+        </div>
+      </div>
+    </footer>
+  );
+};
 
 export default Footer;
