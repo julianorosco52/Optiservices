@@ -1,36 +1,56 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../features/auth/authSlice";
+import axios from "axios";
 import { Eye, EyeOff, LogIn, AlertCircle } from "lucide-react";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({});
+  const [apiError, setApiError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const { login } = useContext(AuthContext);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!email) {
+      newErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = "Email address is invalid";
+    }
+    if (!password) newErrors.password = "Password is required";
+    return newErrors;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+    const formErrors = validateForm();
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+      return;
+    }
+
+    setErrors({});
+    setApiError("");
     setLoading(true);
 
     try {
-      // For demo purposes, using predefined credentials
-      // In a real app, this would be an API call
-      if (email === "user@example.com" && password === "password") {
-        await login({ email, role: "user" });
-        navigate("/user-dashboard");
-      } else if (email === "admin@example.com" && password === "password") {
-        await login({ email, role: "admin" });
+      const res = await axios.post("http://localhost:5000/api/auth/login", {
+        email,
+        password,
+      });
+      dispatch(loginSuccess({ user: { email, role: res.data.role }, token: res.data.token }));
+      if (res.data.role === "admin") {
         navigate("/admin-dashboard");
       } else {
-        setError("Invalid credentials. Please try again.");
+        navigate("/user-dashboard");
       }
     } catch (err) {
-      setError(err.message || "Login failed. Please try again.");
+      setApiError(err.response?.data?.message || "Login failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -53,14 +73,14 @@ const Login = () => {
         </div>
 
         <div className="card">
-          {error && (
+          {apiError && (
             <div className="bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 p-4 rounded-lg flex items-center mb-6">
               <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0" />
-              <span className="text-sm">{error}</span>
+              <span className="text-sm">{apiError}</span>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6" noValidate>
             <div>
               <label
                 htmlFor="email"
@@ -76,9 +96,10 @@ const Login = () => {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="input"
+                className={`input ${errors.email ? 'border-red-500' : ''}`}
                 placeholder="you@example.com"
               />
+              {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
             </div>
 
             <div>
@@ -97,7 +118,7 @@ const Login = () => {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="input pr-10"
+                  className={`input pr-10 ${errors.password ? 'border-red-500' : ''}`}
                   placeholder="••••••••"
                 />
                 <button
@@ -112,6 +133,7 @@ const Login = () => {
                   )}
                 </button>
               </div>
+              {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
             </div>
 
             <div className="flex items-center justify-between">
@@ -175,48 +197,16 @@ const Login = () => {
             </div>
           </form>
 
-          <div className="mt-6">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300 dark:border-gray-700"></div>
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">
-                  Demo Accounts
-                </span>
-              </div>
-            </div>
-
-            <div className="mt-6 grid grid-cols-2 gap-3 text-sm">
-              <div className="border border-gray-300 dark:border-gray-700 rounded-md p-3 text-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-                   onClick={() => {
-                     setEmail("user@example.com");
-                     setPassword("password");
-                   }}>
-                <p className="font-medium text-gray-700 dark:text-gray-300">User Account</p>
-                <p className="text-gray-500 dark:text-gray-400 text-xs mt-1">user@example.com</p>
-              </div>
-              <div className="border border-gray-300 dark:border-gray-700 rounded-md p-3 text-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-                   onClick={() => {
-                     setEmail("admin@example.com");
-                     setPassword("password");
-                   }}>
-                <p className="font-medium text-gray-700 dark:text-gray-300">Admin Account</p>
-                <p className="text-gray-500 dark:text-gray-400 text-xs mt-1">admin@example.com</p>
-              </div>
-            </div>
-          </div>
+          <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-6">
+            Don't have an account?{" "}
+            <Link
+              to="/signup"
+              className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
+            >
+              Sign up now
+            </Link>
+          </p>
         </div>
-
-        <p className="text-center text-sm text-gray-600 dark:text-gray-400">
-          Don't have an account?{" "}
-          <Link
-            to="/signup"
-            className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
-          >
-            Sign up now
-          </Link>
-        </p>
       </div>
     </div>
   );
