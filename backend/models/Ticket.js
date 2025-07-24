@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const TicketSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
@@ -7,9 +7,13 @@ const TicketSchema = new mongoose.Schema({
   status: {
     type: String,
     enum: ["Open", "In Progress", "Closed"],
-    default: "Open",
+    default: "Open"
   },
-  createdAt: { type: Date, default: Date.now },
+  assignedTo: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User"
+  },
+  createdAt: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model("Ticket", TicketSchema);
+export default mongoose.model("Ticket", TicketSchema);
