@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { getTicketsSuccess, deleteTicketSuccess } from "../features/tickets/ticketSlice";
+import { getTicketsSuccess, deleteTicketSuccess, updateTicketSuccess } from "../features/tickets/ticketSlice";
 import axios from "axios";
 import socket from "../utils/socket";
 import { 
