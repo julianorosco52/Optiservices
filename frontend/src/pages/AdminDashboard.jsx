@@ -1,216 +1,340 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  getTicketsSuccess,
+  updateTicketSuccess,
+} from "../features/tickets/ticketSlice";
 import axios from "axios";
-import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
+import socket from "../utils/socket";
+import {
+  Clock,
+  CheckCircle2,
+  AlertTriangle,
+  Search,
+  Filter,
+  Users,
+  BarChart,
+  Ticket as TicketIcon,
+} from "lucide-react";
+import {
+  BarChart as RechartsBarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 
-class AdminDashboard extends Component {
-  state = {
-    tickets: [],
-    filteredTickets: [],
-    statusFilter: "All",
-    isLoading: true,
-    error: null,
-  };
+const AdminDashboard = () => {
+  const dispatch = useDispatch();
+  const { tickets } = useSelector((state) => state.tickets);
+  const [stats, setStats] = useState({
+    total: 0,
+    open: 0,
+    inProgress: 0,
+    closed: 0,
+  });
+  const [admins, setAdmins] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterStatus, setFilterStatus] = useState("All");
+  const [isLoading, setIsLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
-  async componentDidMount() {
-    this.fetchTickets();
-  }
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      setIsLoading(true);
+      try {
+        const token = localStorage.getItem("token");
+        const [ticketsRes, adminsRes] = await Promise.all([
+          axios.get(
+            `http://localhost:5000/api/tickets?page=${page}&limit=10&status=${filterStatus}&search=${searchTerm}`,
+            { headers: { Authorization: `Bearer ${token}` } }
+          ),
+          axios.get("http://localhost:5000/api/users/admins", {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ]);
 
-  fetchTickets = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        this.setState({ error: "Unauthorized access!", isLoading: false });
-        return;
+        dispatch(getTicketsSuccess(ticketsRes.data.tickets));
+        setTotalPages(ticketsRes.data.totalPages);
+        setAdmins(adminsRes.data);
+      } catch (err) {
+        console.error(err);
       }
+      setIsLoading(false);
+    };
 
-      const res = await axios.get(
-        "https://role-based-ticketing-system-w2fw.onrender.com/api/tickets",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+    fetchInitialData();
 
-      const tickets = Array.isArray(res.data) ? res.data : [];
-      this.setState({ tickets, filteredTickets: tickets, isLoading: false });
-    } catch (error) {
-      this.setState({ error: "Failed to load tickets.", isLoading: false });
-    }
-  };
+    socket.connect();
+    socket.on("ticket:updated", (updatedTicket) => {
+      dispatch(updateTicketSuccess(updatedTicket));
+    });
+    socket.on("ticket:assigned", (assignedTicket) => {
+      dispatch(updateTicketSuccess(assignedTicket));
+    });
 
-  handleStatusChange = async (ticketId, newStatus) => {
+    return () => {
+      socket.disconnect();
+      socket.off("ticket:updated");
+      socket.off("ticket:assigned");
+    };
+  }, [page, filterStatus, searchTerm, dispatch]);
+
+  useEffect(() => {
+    const open = tickets.filter((t) => t.status === "Open").length;
+    const inProgress = tickets.filter((t) => t.status === "In Progress").length;
+    const closed = tickets.filter((t) => t.status === "Closed").length;
+    setStats({ total: tickets.length, open, inProgress, closed });
+  }, [tickets]);
+
+  const handleAssignTicket = async (ticketId, adminId) => {
     try {
       const token = localStorage.getItem("token");
       await axios.put(
-        `https://role-based-ticketing-system-w2fw.onrender.com/api/tickets/${ticketId}`,
-        { status: newStatus },
+        `http://localhost:5000/api/tickets/${ticketId}/assign`,
+        { adminId },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-
-      this.setState((prevState) => {
-        const updatedTickets = prevState.tickets.map((ticket) =>
-          ticket._id === ticketId ? { ...ticket, status: newStatus } : ticket
-        );
-        return { tickets: updatedTickets, filteredTickets: updatedTickets };
-      });
-    } catch (error) {
-      console.error("Error updating status:", error);
+    } catch (err) {
+      console.error(err);
     }
   };
 
-  handleFilterChange = (e) => {
-    const status = e.target.value;
-    this.setState({
-      statusFilter: status,
-      filteredTickets:
-        status === "All"
-          ? this.state.tickets
-          : this.state.tickets.filter((ticket) => ticket.status === status),
-    });
+  const handleUpdateStatus = async (ticketId, status) => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.put(
+        `http://localhost:5000/api/tickets/${ticketId}`,
+        { status },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  render() {
-    const { tickets, filteredTickets, statusFilter, isLoading, error } =
-      this.state;
+  const chartData = [
+    { name: "Open", count: stats.open },
+    { name: "In Progress", count: stats.inProgress },
+    { name: "Closed", count: stats.closed },
+  ];
 
-    const statusCounts = {
-      Open: tickets.filter((t) => t.status === "Open").length,
-      "In Progress": tickets.filter((t) => t.status === "In Progress").length,
-      Closed: tickets.filter((t) => t.status === "Closed").length,
-    };
+  const StatCard = ({ icon, label, value, color }) => (
+    <div
+      className={`bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 flex items-center space-x-4`}
+    >
+      <div className={`p-3 rounded-full ${color}`}>
+        {icon}
+      </div>
+      <div>
+        <p className="text-sm text-gray-500 dark:text-gray-400">{label}</p>
+        <p className="text-2xl font-bold text-gray-900 dark:text-white">
+          {value}
+        </p>
+      </div>
+    </div>
+  );
 
-    const data = [
-      { name: "Open", value: statusCounts.Open },
-      { name: "In Progress", value: statusCounts["In Progress"] },
-      { name: "Closed", value: statusCounts.Closed },
-    ];
-
-    const COLORS = ["#4CAF50", "#FFC107", "#FF5252"];
-
-    if (isLoading) {
-      return (
-        <div className="flex justify-center items-center min-h-screen">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-        </div>
-      );
-    }
-
-    if (error) {
-      return (
-        <div className="text-center mt-8">
-          <p className="text-red-500">{error}</p>
-          <button
-            onClick={this.fetchTickets}
-            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-          >
-            Retry
-          </button>
-        </div>
-      );
-    }
-
-    return (
-      <div className="min-h-screen bg-gray-900 text-white p-8">
-        <h1 className="text-3xl font-bold text-center text-blue-400 mb-6">
-          🛠️ Admin Dashboard
+  return (
+    <div className="bg-gray-50 dark:bg-gray-900 min-h-screen pb-12">
+      <div className="container-custom py-8">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
+          Admin Dashboard
         </h1>
 
-        {/* Analytics Chart */}
-        <div className="flex justify-center mb-6">
-          <div className="bg-gray-800 p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold text-center mb-4">
-              📊 Ticket Analytics
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <StatCard
+            icon={<TicketIcon className="h-6 w-6 text-blue-600" />}
+            label="Total Tickets"
+            value={stats.total}
+            color="bg-blue-100 dark:bg-blue-900/30"
+          />
+          <StatCard
+            icon={<Clock className="h-6 w-6 text-yellow-600" />}
+            label="Open"
+            value={stats.open}
+            color="bg-yellow-100 dark:bg-yellow-900/30"
+          />
+          <StatCard
+            icon={<AlertTriangle className="h-6 w-6 text-orange-600" />}
+            label="In Progress"
+            value={stats.inProgress}
+            color="bg-orange-100 dark:bg-orange-900/30"
+          />
+          <StatCard
+            icon={<CheckCircle2 className="h-6 w-6 text-green-600" />}
+            label="Closed"
+            value={stats.closed}
+            color="bg-green-100 dark:bg-green-900/30"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+          <div className="lg:col-span-2 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
+              <BarChart className="h-6 w-6 mr-2" />
+              Ticket Status Overview
             </h2>
-            <PieChart width={470} height={300}>
-              <Pie
-                data={data}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                label={({ name, percent }) =>
-                  `${name}: ${(percent * 100).toFixed(0)}%`
-                }
-                outerRadius={120}
-                fill="#8884d8"
-                dataKey="value"
-              >
-                {data.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-              </Pie>
-              <Tooltip />
-              <Legend />
-            </PieChart>
+            <ResponsiveContainer width="100%" height={300}>
+              <RechartsBarChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-gray-200 dark:stroke-gray-700"/>
+                <XAxis dataKey="name" className="text-xs text-gray-600 dark:text-gray-400"/>
+                <YAxis className="text-xs text-gray-600 dark:text-gray-400"/>
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "rgba(255, 255, 255, 0.8)",
+                    backdropFilter: "blur(5px)",
+                    border: "1px solid #e5e7eb",
+                    borderRadius: "0.5rem",
+                    color: "#1f2937",
+                  }}
+                  cursor={{ fill: 'rgba(239, 246, 255, 0.5)' }}
+                />
+                <Legend iconType="circle" iconSize={10}/>
+                <Bar dataKey="count" fill="#4f46e5" name="Tickets" radius={[4, 4, 0, 0]}/>
+              </RechartsBarChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
+              <Users className="h-6 w-6 mr-2" />
+              Admins
+            </h2>
+            <ul className="space-y-3">
+              {admins.map((admin) => (
+                <li
+                  key={admin._id}
+                  className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50"
+                >
+                  <span className="text-gray-800 dark:text-gray-200">{admin.username}</span>
+                  <span className="text-xs text-gray-500 dark:text-gray-400">{admin.email}</span>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
 
-        {/* Filter Dropdown */}
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold">🎟️ Tickets</h2>
-          <select
-            value={statusFilter}
-            onChange={this.handleFilterChange}
-            className="bg-gray-800 text-white p-2 rounded-lg border border-gray-700"
-            aria-label="Filter tickets by status"
-          >
-            <option value="All">All</option>
-            <option value="Open">Open</option>
-            <option value="In Progress">In Progress</option>
-            <option value="Closed">Closed</option>
-          </select>
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 mb-6">
+           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="relative flex-1">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Search className="h-5 w-5 text-gray-400" />
+              </div>
+              <input
+                type="text"
+                className="input pl-10"
+                placeholder="Search tickets..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            <div className="flex items-center">
+              <Filter className="h-5 w-5 text-gray-500 dark:text-gray-400 mr-2" />
+              <select
+                className="input py-2 max-w-xs"
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value)}
+              >
+                <option value="All">All Status</option>
+                <option value="Open">Open</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Closed">Closed</option>
+              </select>
+            </div>
+          </div>
         </div>
 
-        {/* Tickets List */}
-        {filteredTickets.length > 0 ? (
-          filteredTickets.map((ticket) => (
-            <div
-              key={ticket._id}
-              className="bg-gray-800 p-4 mb-4 rounded-lg shadow-md"
-            >
-              <h3 className="text-lg font-bold text-blue-300">
-                {ticket.title}
-              </h3>
-              <p className="text-gray-300">{ticket.description}</p>
-              <p className="text-gray-500">
-                ⏲ Created At: {new Date(ticket.createdAt).toLocaleString()}
-              </p>
-
-              <div className="flex justify-between items-center mt-4">
-                <span
-                  className={`px-3 py-1 rounded text-white font-semibold ${
-                    ticket.status === "Open"
-                      ? "bg-green-500"
-                      : ticket.status === "In Progress"
-                      ? "bg-yellow-500"
-                      : "bg-red-500"
-                  }`}
-                >
-                  {ticket.status}
-                </span>
-
-                <select
-                  value={ticket.status}
-                  onChange={(e) =>
-                    this.handleStatusChange(ticket._id, e.target.value)
-                  }
-                  className="bg-gray-700 text-white p-2 rounded-lg border border-gray-600"
-                  aria-label="Change ticket status"
-                >
-                  <option value="Open">Open</option>
-                  <option value="In Progress">In Progress</option>
-                  <option value="Closed">Closed</option>
-                </select>
-              </div>
-            </div>
-          ))
-        ) : (
-          <p className="text-gray-500">No tickets found.</p>
-        )}
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+              <thead className="bg-gray-50 dark:bg-gray-700/50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    Ticket
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    Assigned To
+                  </th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                {tickets.map((ticket) => (
+                  <tr key={ticket._id} className="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors duration-150">
+                    <td className="px-6 py-4">
+                      <p className="text-sm font-medium text-gray-900 dark:text-white">{ticket.title}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{ticket.description}</p>
+                    </td>
+                    <td className="px-6 py-4">
+                      <select
+                        value={ticket.status}
+                        onChange={(e) =>
+                          handleUpdateStatus(ticket._id, e.target.value)
+                        }
+                        className="input text-sm"
+                      >
+                        <option>Open</option>
+                        <option>In Progress</option>
+                        <option>Closed</option>
+                      </select>
+                    </td>
+                    <td className="px-6 py-4">
+                      <select
+                        value={ticket.assignedTo?._id || ""}
+                        onChange={(e) =>
+                          handleAssignTicket(ticket._id, e.target.value)
+                        }
+                        className="input text-sm"
+                      >
+                        <option value="">Unassigned</option>
+                        {admins.map((admin) => (
+                          <option key={admin._id} value={admin._id}>
+                            {admin.username}
+                          </option>
+                        ))}
+                      </select>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <a href={`/tickets/${ticket._id}`} className="text-blue-500 hover:underline">View</a>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div className="flex justify-center mt-8">
+          <button
+            onClick={() => setPage(page - 1)}
+            disabled={page === 1}
+            className="bg-gray-700 text-white p-2 rounded-lg border border-gray-600 mr-2"
+          >
+            Previous
+          </button>
+          <span className="p-2">
+            Page {page} of {totalPages}
+          </span>
+          <button
+            onClick={() => setPage(page + 1)}
+            disabled={page === totalPages}
+            className="bg-gray-700 text-white p-2 rounded-lg border border-gray-600 ml-2"
+          >
+            Next
+          </button>
+        </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 export default AdminDashboard;
+
