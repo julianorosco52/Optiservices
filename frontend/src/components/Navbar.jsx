@@ -41,7 +41,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-white dark:bg-gray-900 shadow-sm border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50">
+    <nav className="bg-background-light-ui dark:bg-background-dark-ui shadow-sm border-b border-secondary dark:border-secondary sticky top-0 z-50">
       <div className="container-custom mx-auto">
         <div className="flex justify-between items-center h-16">
           {/* Logo & Brand */}
@@ -56,10 +56,10 @@ const Navbar = () => {
               }
               className="flex items-center space-x-2"
             >
-              <Ticket className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
-              <span className="text-xl font-bold text-gray-900 dark:text-white">
+              <Ticket className="h-6 w-6 text-primary" />
+              <span className="text-xl font-bold text-text-light dark:text-text-dark">
                 Role
-                <span className="text-indigo-600 dark:text-indigo-400">
+                <span className="text-primary">
                   Tix
                 </span>
               </span>
@@ -72,7 +72,7 @@ const Navbar = () => {
               <>
                 <Link
                   to="/login"
-                  className="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors duration-200"
+                  className="text-text-muted hover:text-primary font-medium transition-colors duration-200"
                 >
                   Log In
                 </Link>
@@ -85,7 +85,7 @@ const Navbar = () => {
                 {user?.role === "admin" && (
                   <Link
                     to="/admin-dashboard"
-                    className="flex items-center text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors duration-200"
+                    className="flex items-center text-text-muted hover:text-primary font-medium transition-colors duration-200"
                   >
                     <Shield className="h-5 w-5 mr-1" />
                     Admin
@@ -94,7 +94,7 @@ const Navbar = () => {
                 {user?.role === "user" && (
                   <Link
                     to="/create-ticket"
-                    className="flex items-center text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors duration-200"
+                    className="flex items-center text-text-muted hover:text-primary font-medium transition-colors duration-200"
                   >
                     <Ticket className="h-5 w-5 mr-1" />
                     New Ticket
@@ -106,14 +106,14 @@ const Navbar = () => {
                       ? "/admin-dashboard"
                       : "/user-dashboard"
                   }
-                  className="flex items-center text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors duration-200"
+                  className="flex items-center text-text-muted hover:text-primary font-medium transition-colors duration-200"
                 >
                   <User className="h-5 w-5 mr-1" />
                   Dashboard
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="flex items-center text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 font-medium transition-colors duration-200"
+                  className="flex items-center text-text-muted hover:text-accent-error font-medium transition-colors duration-200"
                 >
                   <LogOut className="h-5 w-5 mr-1" />
                   Logout
@@ -124,7 +124,7 @@ const Navbar = () => {
             {/* Dark Mode Toggle */}
             <button
               onClick={toggleDarkMode}
-              className="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
+              className="p-2 rounded-full text-text-muted hover:bg-secondary transition-colors duration-200"
               aria-label="Toggle dark mode"
             >
               {isDarkMode ? (
@@ -139,7 +139,7 @@ const Navbar = () => {
           <div className="flex items-center space-x-2 md:hidden">
             <button
               onClick={toggleDarkMode}
-              className="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
+              className="p-2 rounded-full text-text-muted hover:bg-secondary transition-colors duration-200"
               aria-label="Toggle dark mode"
             >
               {isDarkMode ? (
@@ -149,7 +149,7 @@ const Navbar = () => {
               )}
             </button>
             <button
-              className="p-2 rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
+              className="p-2 rounded-md text-text-muted hover:bg-secondary transition-colors duration-200"
               onClick={toggleMenu}
             >
               {isMenuOpen ? (
@@ -164,20 +164,20 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="md:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 animate-fade-in">
+        <div className="md:hidden bg-background-light-ui dark:bg-background-dark-ui border-t border-secondary animate-fade-in">
           <div className="container-custom py-3 space-y-2">
             {!isAuthenticated ? (
               <>
                 <Link
                   to="/login"
-                  className="block py-2 px-4 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg font-medium transition-colors duration-200"
+                  className="block py-2 px-4 text-text-muted hover:bg-secondary rounded-lg font-medium transition-colors duration-200"
                   onClick={toggleMenu}
                 >
                   Log In
                 </Link>
                 <Link
                   to="/signup"
-                  className="block py-2 px-4 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg font-medium transition-colors duration-200"
+                  className="block py-2 px-4 text-text-dark bg-primary hover:bg-opacity-90 rounded-lg font-medium transition-colors duration-200"
                   onClick={toggleMenu}
                 >
                   Sign Up
@@ -188,7 +188,7 @@ const Navbar = () => {
                 {user?.role === "user" && (
                   <Link
                     to="/create-ticket"
-                    className="block py-2 px-4 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg font-medium transition-colors duration-200"
+                    className="block py-2 px-4 text-text-muted hover:bg-secondary rounded-lg font-medium transition-colors duration-200"
                     onClick={toggleMenu}
                   >
                     <div className="flex items-center">
@@ -203,7 +203,7 @@ const Navbar = () => {
                       ? "/admin-dashboard"
                       : "/user-dashboard"
                   }
-                  className="block py-2 px-4 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg font-medium transition-colors duration-200"
+                  className="block py-2 px-4 text-text-muted hover:bg-secondary rounded-lg font-medium transition-colors duration-200"
                   onClick={toggleMenu}
                 >
                   <div className="flex items-center">
@@ -213,7 +213,7 @@ const Navbar = () => {
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="block w-full text-left py-2 px-4 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg font-medium transition-colors duration-200"
+                  className="block w-full text-left py-2 px-4 text-text-muted hover:bg-secondary rounded-lg font-medium transition-colors duration-200"
                 >
                   <div className="flex items-center">
                     <LogOut className="h-5 w-5 mr-2" />

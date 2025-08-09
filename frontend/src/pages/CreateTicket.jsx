@@ -43,11 +43,11 @@ const CreateTicket = () => {
       setTitle("");
       setDescription("");
       setSuccess("Ticket created successfully! Redirecting...");
-      
+
       setTimeout(() => {
         navigate("/user-dashboard");
       }, 2000);
-    } catch (error) {
+    } catch {
       setError("Failed to create ticket. Try again!");
     } finally {
       setIsSubmitting(false);

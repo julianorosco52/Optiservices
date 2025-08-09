@@ -39,13 +39,11 @@ const AdminDashboard = () => {
   const [admins, setAdmins] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("All");
-  const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     const fetchInitialData = async () => {
-      setIsLoading(true);
       try {
         const token = localStorage.getItem("token");
         const [ticketsRes, adminsRes] = await Promise.all([
@@ -64,23 +62,23 @@ const AdminDashboard = () => {
       } catch (err) {
         console.error(err);
       }
-      setIsLoading(false);
     };
 
     fetchInitialData();
 
-    socket.connect();
-    socket.on("ticket:updated", (updatedTicket) => {
+    const onUpdated = (updatedTicket) => {
       dispatch(updateTicketSuccess(updatedTicket));
-    });
-    socket.on("ticket:assigned", (assignedTicket) => {
+    };
+    const onAssigned = (assignedTicket) => {
       dispatch(updateTicketSuccess(assignedTicket));
-    });
+    };
+
+    socket.on("ticket:updated", onUpdated);
+    socket.on("ticket:assigned", onAssigned);
 
     return () => {
-      socket.disconnect();
-      socket.off("ticket:updated");
-      socket.off("ticket:assigned");
+      socket.off("ticket:updated", onUpdated);
+      socket.off("ticket:assigned", onAssigned);
     };
   }, [page, filterStatus, searchTerm, dispatch]);
 
@@ -127,9 +125,7 @@ const AdminDashboard = () => {
     <div
       className={`bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 flex items-center space-x-4`}
     >
-      <div className={`p-3 rounded-full ${color}`}>
-        {icon}
-      </div>
+      <div className={`p-3 rounded-full ${color}`}>{icon}</div>
       <div>
         <p className="text-sm text-gray-500 dark:text-gray-400">{label}</p>
         <p className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -181,9 +177,16 @@ const AdminDashboard = () => {
             </h2>
             <ResponsiveContainer width="100%" height={300}>
               <RechartsBarChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-gray-200 dark:stroke-gray-700"/>
-                <XAxis dataKey="name" className="text-xs text-gray-600 dark:text-gray-400"/>
-                <YAxis className="text-xs text-gray-600 dark:text-gray-400"/>
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  vertical={false}
+                  className="stroke-gray-200 dark:stroke-gray-700"
+                />
+                <XAxis
+                  dataKey="name"
+                  className="text-xs text-gray-600 dark:text-gray-400"
+                />
+                <YAxis className="text-xs text-gray-600 dark:text-gray-400" />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: "rgba(255, 255, 255, 0.8)",
@@ -192,10 +195,15 @@ const AdminDashboard = () => {
                     borderRadius: "0.5rem",
                     color: "#1f2937",
                   }}
-                  cursor={{ fill: 'rgba(239, 246, 255, 0.5)' }}
+                  cursor={{ fill: "rgba(239, 246, 255, 0.5)" }}
                 />
-                <Legend iconType="circle" iconSize={10}/>
-                <Bar dataKey="count" fill="#4f46e5" name="Tickets" radius={[4, 4, 0, 0]}/>
+                <Legend iconType="circle" iconSize={10} />
+                <Bar
+                  dataKey="count"
+                  fill="#4f46e5"
+                  name="Tickets"
+                  radius={[4, 4, 0, 0]}
+                />
               </RechartsBarChart>
             </ResponsiveContainer>
           </div>
@@ -210,8 +218,12 @@ const AdminDashboard = () => {
                   key={admin._id}
                   className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50"
                 >
-                  <span className="text-gray-800 dark:text-gray-200">{admin.username}</span>
-                  <span className="text-xs text-gray-500 dark:text-gray-400">{admin.email}</span>
+                  <span className="text-gray-800 dark:text-gray-200">
+                    {admin.username}
+                  </span>
+                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                    {admin.email}
+                  </span>
                 </li>
               ))}
             </ul>
@@ -219,7 +231,7 @@ const AdminDashboard = () => {
         </div>
 
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 mb-6">
-           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="relative flex-1">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Search className="h-5 w-5 text-gray-400" />
@@ -269,10 +281,17 @@ const AdminDashboard = () => {
               </thead>
               <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                 {tickets.map((ticket) => (
-                  <tr key={ticket._id} className="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors duration-150">
+                  <tr
+                    key={ticket._id}
+                    className="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors duration-150"
+                  >
                     <td className="px-6 py-4">
-                      <p className="text-sm font-medium text-gray-900 dark:text-white">{ticket.title}</p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">{ticket.description}</p>
+                      <p className="text-sm font-medium text-gray-900 dark:text-white">
+                        {ticket.title}
+                      </p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                        {ticket.description}
+                      </p>
                     </td>
                     <td className="px-6 py-4">
                       <select
@@ -304,7 +323,12 @@ const AdminDashboard = () => {
                       </select>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <a href={`/tickets/${ticket._id}`} className="text-blue-500 hover:underline">View</a>
+                      <a
+                        href={`/tickets/${ticket._id}`}
+                        className="text-blue-500 hover:underline"
+                      >
+                        View
+                      </a>
                     </td>
                   </tr>
                 ))}
@@ -337,4 +361,3 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
-

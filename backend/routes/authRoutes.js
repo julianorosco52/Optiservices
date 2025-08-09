@@ -2,7 +2,7 @@ import express from "express";
 import { signup, login } from "../controllers/authControllers.js";
 import {
   signupValidation,
-  loginValidation,
+  loginValidation
 } from "../middleware/validators/authValidators.js";
 import { handleValidationErrors } from "../middleware/handleValidationErrors.js";
 

@@ -1,5 +1,4 @@
-
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 import { jwtDecode } from "jwt-decode";
 
 const initialState = {
@@ -14,15 +13,15 @@ if (token) {
   initialState.token = token;
   initialState.isAuthenticated = true;
   initialState.user = {
-    email: decodedToken.email,
+    email: decodedToken.email || null,
+    username: decodedToken.username || null,
     role: decodedToken.role,
     id: decodedToken.id,
   };
 }
 
-
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
     loginSuccess: (state, action) => {

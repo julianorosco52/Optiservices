@@ -5,8 +5,8 @@ import User from "../models/User.js";
 
 dotenv.config();
 
-export async function signup(req, res) {
-  const { username, email, password, role } = req.body;
+export async function signup (req, res) {
+  const { username, email, password } = req.body;
 
   try {
     const existingUser = await User.findOne({ email });
@@ -17,7 +17,7 @@ export async function signup(req, res) {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const user = new User({ username, email, password: hashedPassword, role });
+    const user = new User({ username, email, password: hashedPassword });
 
     await user.save();
 
@@ -28,7 +28,7 @@ export async function signup(req, res) {
   }
 }
 
-export async function login(req, res) {
+export async function login (req, res) {
   const { email, password } = req.body;
 
   try {
@@ -43,7 +43,12 @@ export async function login(req, res) {
     }
 
     const token = jwt.sign(
-      { id: user._id, role: user.role },
+      {
+        id: user._id,
+        role: user.role,
+        email: user.email,
+        username: user.username
+      },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
@@ -54,4 +59,3 @@ export async function login(req, res) {
     res.status(500).json({ message: "Internal server error" });
   }
 }
-

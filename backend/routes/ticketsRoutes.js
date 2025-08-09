@@ -6,13 +6,13 @@ import {
   updateTicket,
   deleteTicket,
   assignTicket,
-  addComment,
+  addComment
 } from "../controllers/ticketController.js";
 import authMiddleware from "../middleware/auth.js";
 import {
   createTicketValidation,
   updateTicketValidation,
-  addCommentValidation,
+  addCommentValidation
 } from "../middleware/validators/ticketValidators.js";
 import { handleValidationErrors } from "../middleware/handleValidationErrors.js";
 

@@ -8,6 +8,7 @@ import helmet from "helmet";
 
 import authRoutes from "./routes/authRoutes.js";
 import ticketRoutes from "./routes/ticketsRoutes.js";
+import usersRoutes from "./routes/usersRoutes.js";
 import jwt from "jsonwebtoken";
 
 dotenv.config();
@@ -17,8 +18,8 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: "http://localhost:5173", // Adjust for your frontend URL
-    methods: ["GET", "POST"],
-  },
+    methods: ["GET", "POST"]
+  }
 });
 
 // Socket.io middleware for authentication
@@ -50,6 +51,7 @@ app.use((req, res, next) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/tickets", ticketRoutes);
+app.use("/api/users", usersRoutes);
 
 app.get("/", (req, res) => {
   res.send("API is running....");

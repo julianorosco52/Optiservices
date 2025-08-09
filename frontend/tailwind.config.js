@@ -1,44 +1,41 @@
 /** @type {import('tailwindcss').Config} */
+import forms from "@tailwindcss/forms";
+
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
-  darkMode: 'class',
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  darkMode: "class",
   theme: {
     extend: {
       colors: {
-        primary: {
-          50: '#eef2ff',
-          100: '#e0e7ff',
-          200: '#c7d2fe',
-          300: '#a5b4fc',
-          400: '#818cf8',
-          500: '#6366f1',
-          600: '#4f46e5',
-          700: '#4338ca',
-          800: '#3730a3',
-          900: '#312e81',
-          950: '#1e1b4b',
-        },
+        primary: "#86C232",
+        secondary: "#61892F",
+        "background-dark": "#222629",
+        "background-dark-ui": "#474B4F",
+        "background-light": "#F8F9FA",
+        "background-light-ui": "#FFFFFF",
+        "text-dark": "#FFFFFF",
+        "text-light": "#222629",
+        "text-muted": "#9E9E9E",
+        "accent-error": "#E74C3C",
+        "accent-warning": "#F39C12",
+        "accent-info": "#3498DB",
+        "accent-success": "#28A745",
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ["Inter", "system-ui", "sans-serif"],
       },
       boxShadow: {
-        'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)',
+        soft: "0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)",
       },
       animation: {
-        'bounce-slow': 'bounce 3s infinite',
+        "bounce-slow": "bounce 3s infinite",
       },
       borderRadius: {
-        'xl': '0.75rem',
-        '2xl': '1rem',
-        '3xl': '1.5rem',
+        xl: "0.75rem",
+        "2xl": "1rem",
+        "3xl": "1.5rem",
       },
     },
   },
-  plugins: [
-    require('@tailwindcss/forms'),
-  ],
-} 
+  plugins: [forms],
+};

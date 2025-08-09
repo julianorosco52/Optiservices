@@ -1,19 +1,30 @@
 import mongoose from "mongoose";
 
-const TicketSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  title: { type: String, required: true },
-  description: { type: String, required: true },
-  status: {
-    type: String,
-    enum: ["Open", "In Progress", "Closed"],
-    default: "Open"
+const TicketSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      index: true
+    },
+    title: { type: String, required: true, index: true },
+    description: { type: String, required: true },
+    status: {
+      type: String,
+      enum: ["Open", "In Progress", "Closed"],
+      default: "Open",
+      index: true
+    },
+    assignedTo: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      index: true
+    }
   },
-  assignedTo: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
-  },
-  createdAt: { type: Date, default: Date.now }
-});
+  { timestamps: true }
+);
+
+TicketSchema.index({ createdAt: -1 });
 
 export default mongoose.model("Ticket", TicketSchema);

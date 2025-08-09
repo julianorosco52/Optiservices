@@ -7,7 +7,6 @@ const Signup = () => {
     username: "",
     email: "",
     password: "",
-    role: "user",
   });
   const [errors, setErrors] = useState({});
   const [apiError, setApiError] = useState("");
@@ -49,101 +48,123 @@ const Signup = () => {
     setLoading(true);
 
     try {
-      await axios.post(
-        "http://localhost:5000/api/auth/signup",
-        formData
-      );
+      await axios.post("http://localhost:5000/api/auth/signup", formData);
       setSuccess("Signup successful! Redirecting to login...");
       setTimeout(() => {
         navigate("/login");
       }, 2000);
     } catch (err) {
-      setApiError(err.response?.data?.message || "Signup failed. Please try again.");
+      setApiError(
+        err.response?.data?.message || "Signup failed. Please try again."
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-900 text-white">
-      <div className="bg-gray-800 p-8 rounded-lg shadow-lg w-96">
-        <h2 className="text-2xl font-bold mb-4 text-center">Sign Up</h2>
+    <div className="bg-background-light dark:bg-background-dark min-h-[calc(100vh-4rem)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8 animate-fade-in animate-slide-up">
+        <div className="text-center">
+          <h2 className="text-3xl font-bold text-text-light dark:text-text-dark">
+            Create an Account
+          </h2>
+          <p className="mt-2 text-text-muted">
+            Get started with your new account
+          </p>
+        </div>
 
-        {apiError && (
-          <p className="text-red-400 text-sm text-center">{apiError}</p>
-        )}
-        {success && (
-          <p className="text-green-400 text-sm text-center">{success}</p>
-        )}
+        <div className="card">
+          {apiError && (
+            <p className="bg-accent-error bg-opacity-20 text-accent-error p-3 rounded-lg text-sm text-center">
+              {apiError}
+            </p>
+          )}
+          {success && (
+            <p className="bg-accent-success bg-opacity-20 text-accent-success p-3 rounded-lg text-sm text-center">
+              {success}
+            </p>
+          )}
 
-        <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-          <div>
-            <label className="block text-sm">Username</label>
-            <input
-              type="text"
-              name="username"
-              className={`w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.username ? 'border-red-500' : ''}`}
-              value={formData.username}
-              onChange={handleChange}
-              required
-            />
-            {errors.username && <p className="text-red-500 text-xs mt-1">{errors.username}</p>}
-          </div>
+          <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+            <div>
+              <label className="block text-sm font-medium text-text-muted mb-1">
+                Username
+              </label>
+              <input
+                type="text"
+                name="username"
+                className={`input ${
+                  errors.username ? "border-accent-error" : ""
+                }`}
+                value={formData.username}
+                onChange={handleChange}
+                required
+              />
+              {errors.username && (
+                <p className="text-accent-error text-xs mt-1">
+                  {errors.username}
+                </p>
+              )}
+            </div>
 
-          <div>
-            <label className="block text-sm">Email</label>
-            <input
-              type="email"
-              name="email"
-              className={`w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.email ? 'border-red-500' : ''}`}
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
-          </div>
+            <div>
+              <label className="block text-sm font-medium text-text-muted mb-1">
+                Email
+              </label>
+              <input
+                type="email"
+                name="email"
+                className={`input ${errors.email ? "border-accent-error" : ""}`}
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+              {errors.email && (
+                <p className="text-accent-error text-xs mt-1">{errors.email}</p>
+              )}
+            </div>
 
-          <div>
-            <label className="block text-sm">Password</label>
-            <input
-              type="password"
-              name="password"
-              className={`w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.password ? 'border-red-500' : ''}`}
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-            {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
-          </div>
+            <div>
+              <label className="block text-sm font-medium text-text-muted mb-1">
+                Password
+              </label>
+              <input
+                type="password"
+                name="password"
+                className={`input ${
+                  errors.password ? "border-accent-error" : ""
+                }`}
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+              {errors.password && (
+                <p className="text-accent-error text-xs mt-1">
+                  {errors.password}
+                </p>
+              )}
+            </div>
 
-          <div>
-            <label className="block text-sm">Select Role</label>
-            <select
-              name="role"
-              className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={formData.role}
-              onChange={handleChange}
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn btn-primary w-full flex justify-center items-center"
             >
-              <option value="user">User</option>
-              <option value="admin">Admin</option>
-            </select>
-          </div>
+              {loading ? "Creating Account..." : "Create Account"}
+            </button>
+          </form>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white p-2 rounded"
-          >
-            {loading ? "Signing up..." : "Sign Up"}
-          </button>
-        </form>
-
-        <p className="text-sm text-center mt-3">
-          Already have an account?{" "}
-          <Link to="/login" className="text-blue-400 hover:underline">
-            Login
-          </Link>
-        </p>
+          <p className="text-sm text-center text-text-muted mt-6">
+            Already have an account?{" "}
+            <Link
+              to="/login"
+              className="font-medium text-primary hover:text-opacity-80"
+            >
+              Log In
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );
