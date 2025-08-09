@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { createTicketSuccess } from "../features/tickets/ticketSlice";
-import axios from "axios";
+import api from "../utils/api";
 
 const CreateTicket = () => {
   const [title, setTitle] = useState("");
@@ -33,11 +33,7 @@ const CreateTicket = () => {
         return;
       }
 
-      const res = await axios.post(
-        "http://localhost:5000/api/tickets",
-        { title, description },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const res = await api.post("/api/tickets", { title, description });
 
       dispatch(createTicketSuccess(res.data));
       setTitle("");

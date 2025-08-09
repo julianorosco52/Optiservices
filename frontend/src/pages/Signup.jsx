@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../utils/api";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -48,7 +48,7 @@ const Signup = () => {
     setLoading(true);
 
     try {
-      await axios.post("http://localhost:5000/api/auth/signup", formData);
+      await api.post("/api/auth/signup", formData);
       setSuccess("Signup successful! Redirecting to login...");
       setTimeout(() => {
         navigate("/login");

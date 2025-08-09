@@ -6,7 +6,7 @@ import {
   deleteTicketSuccess,
   updateTicketSuccess,
 } from "../features/tickets/ticketSlice";
-import axios from "axios";
+import api from "../utils/api";
 import socket from "../utils/socket";
 import {
   PlusCircle,
@@ -32,12 +32,8 @@ const UserDashboard = () => {
   useEffect(() => {
     const fetchTickets = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const res = await axios.get(
-          `http://localhost:5000/api/tickets?page=${page}&limit=10&status=${filterStatus}&search=${searchTerm}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
+        const res = await api.get(
+          `/api/tickets?page=${page}&limit=10&status=${filterStatus}&search=${searchTerm}`
         );
         dispatch(getTicketsSuccess(res.data.tickets));
         setTotalPages(res.data.totalPages);
@@ -74,10 +70,7 @@ const UserDashboard = () => {
 
   const handleDeleteTicket = async (id) => {
     try {
-      const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:5000/api/tickets/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await api.delete(`/api/tickets/${id}`);
       dispatch(deleteTicketSuccess(id));
     } catch (err) {
       console.error(err);

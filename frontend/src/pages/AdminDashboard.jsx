@@ -4,7 +4,7 @@ import {
   getTicketsSuccess,
   updateTicketSuccess,
 } from "../features/tickets/ticketSlice";
-import axios from "axios";
+import api from "../utils/api";
 import socket from "../utils/socket";
 import {
   Clock,
@@ -45,15 +45,11 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
-        const token = localStorage.getItem("token");
         const [ticketsRes, adminsRes] = await Promise.all([
-          axios.get(
-            `http://localhost:5000/api/tickets?page=${page}&limit=10&status=${filterStatus}&search=${searchTerm}`,
-            { headers: { Authorization: `Bearer ${token}` } }
+          api.get(
+            `/api/tickets?page=${page}&limit=10&status=${filterStatus}&search=${searchTerm}`
           ),
-          axios.get("http://localhost:5000/api/users/admins", {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
+          api.get("/api/users/admins"),
         ]);
 
         dispatch(getTicketsSuccess(ticketsRes.data.tickets));
@@ -91,12 +87,7 @@ const AdminDashboard = () => {
 
   const handleAssignTicket = async (ticketId, adminId) => {
     try {
-      const token = localStorage.getItem("token");
-      await axios.put(
-        `http://localhost:5000/api/tickets/${ticketId}/assign`,
-        { adminId },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await api.put(`/api/tickets/${ticketId}/assign`, { adminId });
     } catch (err) {
       console.error(err);
     }
@@ -104,12 +95,7 @@ const AdminDashboard = () => {
 
   const handleUpdateStatus = async (ticketId, status) => {
     try {
-      const token = localStorage.getItem("token");
-      await axios.put(
-        `http://localhost:5000/api/tickets/${ticketId}`,
-        { status },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await api.put(`/api/tickets/${ticketId}`, { status });
     } catch (err) {
       console.error(err);
     }

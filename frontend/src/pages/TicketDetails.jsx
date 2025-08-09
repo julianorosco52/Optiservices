@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import axios from "axios";
+import api from "../utils/api";
 import socket from "../utils/socket";
 import { Send, Paperclip, MessageSquare } from "lucide-react";
 
@@ -16,10 +16,7 @@ const TicketDetails = () => {
   useEffect(() => {
     const fetchTicketDetails = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const res = await axios.get(`http://localhost:5000/api/tickets/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await api.get(`/api/tickets/${id}`);
         setTicket(res.data.ticket);
         setComments(res.data.comments);
         setIsLoading(false);
@@ -48,12 +45,7 @@ const TicketDetails = () => {
     e.preventDefault();
     if (!newComment.trim()) return;
     try {
-      const token = localStorage.getItem("token");
-      await axios.post(
-        `http://localhost:5000/api/tickets/${id}/comments`,
-        { text: newComment },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await api.post(`/api/tickets/${id}/comments`, { text: newComment });
       setNewComment("");
     } catch (err) {
       console.error(err);

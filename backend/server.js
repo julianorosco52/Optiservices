@@ -15,10 +15,21 @@ dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
+
+const allowedOriginsEnv =
+  process.env.ALLOWED_ORIGINS || "http://localhost:5173";
+const allowedOrigins = allowedOriginsEnv.split(",").map((o) => o.trim());
+
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173", // Adjust for your frontend URL
-    methods: ["GET", "POST"]
+    origin: (origin, cb) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        return cb(null, true);
+      }
+      return cb(new Error("Not allowed by CORS"));
+    },
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
   }
 });
 
@@ -38,7 +49,17 @@ io.use((socket, next) => {
 });
 
 app.use(json());
-app.use(cors());
+app.use(
+  cors({
+    origin: (origin, cb) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        return cb(null, true);
+      }
+      return cb(new Error("Not allowed by CORS"));
+    },
+    credentials: true
+  })
+);
 app.use(helmet());
 
 connectDB();
