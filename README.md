@@ -13,7 +13,7 @@ The **Optiservices** Es una aplicación  full-stack creada para generar reportes
 - **Autenticación JWT**: Inicio de sesión y control de acceso seguros.
 - **Tema claro-oscuro**: DIseñado con Tailwind para preferencia y comodidad del usuario
 
-## Tech Stack
+## Tecnologías y herramientas utilizadas
 - **Frontend**: React, Tailwind CSS, React Router
 - **Backend**: Node.js, Express.js, MongoDB, Mongoose
 - **Autenticación**: JWT (JSON Token web)
