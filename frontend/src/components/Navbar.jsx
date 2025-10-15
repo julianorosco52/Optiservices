@@ -41,7 +41,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-background-light-ui dark:bg-background-dark-ui shadow-sm border-b border-secondary dark:border-secondary sticky top-0 z-50">
+    <nav className="bg-background-light-ui dark:bg-background-dark-ui shadow-sm border-b-2 border-blue-800 dark:border-blue-700 sticky top-1 z-50">
       <div className="container-custom mx-auto">
         <div className="flex justify-between items-center h-16">
           {/* Logo & Brand */}
@@ -56,12 +56,9 @@ const Navbar = () => {
               }
               className="flex items-center space-x-2"
             >
-              <Ticket className="h-6 w-6 text-primary" />
-              <span className="text-xl font-bold text-text-light dark:text-text-dark">
-                Role
-                <span className="text-primary">
-                  Tix
-                </span>
+              <Ticket className="h-6 w-6 text-blue-800 dark:text-white" />
+              <span className="text-xl font-bold text-blue-800 dark:text-text-dark">
+                Optiservices
               </span>
             </Link>
           </div>
@@ -72,51 +69,33 @@ const Navbar = () => {
               <>
                 <Link
                   to="/login"
-                  className="text-text-muted hover:text-primary font-medium transition-colors duration-200"
+                  className="text-gray-900 dark:text-white hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors duration-200 "
                 >
-                  Log In
+                  Iniciar sesión
                 </Link>
                 <Link to="/signup" className="btn btn-primary">
-                  Sign Up
+                  Registrarse
                 </Link>
               </>
             ) : (
               <>
-                {user?.role === "admin" && (
-                  <Link
-                    to="/admin-dashboard"
-                    className="flex items-center text-text-muted hover:text-primary font-medium transition-colors duration-200"
-                  >
-                    <Shield className="h-5 w-5 mr-1" />
-                    Admin
-                  </Link>
-                )}
-                {user?.role === "user" && (
-                  <Link
-                    to="/create-ticket"
-                    className="flex items-center text-text-muted hover:text-primary font-medium transition-colors duration-200"
-                  >
-                    <Ticket className="h-5 w-5 mr-1" />
-                    New Ticket
-                  </Link>
-                )}
                 <Link
                   to={
                     user?.role === "admin"
                       ? "/admin-dashboard"
                       : "/user-dashboard"
                   }
-                  className="flex items-center text-text-muted hover:text-primary font-medium transition-colors duration-200"
+                  className="flex items-center text-text-muted hover:text-blue-700 dark:hover:text-blue-400 font-medium transition-colors duration-200"
                 >
                   <User className="h-5 w-5 mr-1" />
-                  Dashboard
+                  Panel principal
                 </Link>
                 <button
                   onClick={handleLogout}
                   className="flex items-center text-text-muted hover:text-accent-error font-medium transition-colors duration-200"
                 >
                   <LogOut className="h-5 w-5 mr-1" />
-                  Logout
+                  Cerrar sesión
                 </button>
               </>
             )}
@@ -124,7 +103,7 @@ const Navbar = () => {
             {/* Dark Mode Toggle */}
             <button
               onClick={toggleDarkMode}
-              className="p-2 rounded-full text-text-muted hover:bg-secondary transition-colors duration-200"
+              className="p-2 rounded-full text-gray-700 dark:text-white hover:bg-blue-300 transition-colors duration-200"
               aria-label="Toggle dark mode"
             >
               {isDarkMode ? (
@@ -193,7 +172,7 @@ const Navbar = () => {
                   >
                     <div className="flex items-center">
                       <Ticket className="h-5 w-5 mr-2" />
-                      New Ticket
+                      Nuevo Ticket
                     </div>
                   </Link>
                 )}
@@ -217,7 +196,7 @@ const Navbar = () => {
                 >
                   <div className="flex items-center">
                     <LogOut className="h-5 w-5 mr-2" />
-                    Logout
+                    Cerrar sesión
                   </div>
                 </button>
               </>

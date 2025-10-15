@@ -38,13 +38,13 @@ const CreateTicket = () => {
       dispatch(createTicketSuccess(res.data));
       setTitle("");
       setDescription("");
-      setSuccess("Ticket created successfully! Redirecting...");
+      setSuccess("Ticket creado exitosamente! Redireccionando...");
 
       setTimeout(() => {
         navigate("/user-dashboard");
       }, 2000);
     } catch {
-      setError("Failed to create ticket. Try again!");
+      setError("No se pudo crear el ticket. Inténtalo de nuevo!");
     } finally {
       setIsSubmitting(false);
     }
@@ -54,7 +54,7 @@ const CreateTicket = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white px-6">
       <div className="w-full max-w-lg bg-gray-800 p-8 rounded-lg shadow-lg">
         <h2 className="text-3xl font-bold text-center text-blue-400 mb-6">
-          🎫 Create a Ticket
+           Crear un ticket
         </h2>
 
         {error && (
@@ -71,7 +71,7 @@ const CreateTicket = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-gray-300 font-medium mb-1">
-              Title
+              Titulo
             </label>
             <input
               type="text"
@@ -79,20 +79,20 @@ const CreateTicket = () => {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Enter ticket title"
+              placeholder="Ingrese el titulo del ticket"
             />
           </div>
 
           <div>
             <label className="block text-gray-300 font-medium mb-1">
-              Description
+              Descripción
             </label>
             <textarea
               name="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Describe the issue..."
+              placeholder="Describe el problema..."
               rows="4"
             ></textarea>
           </div>
@@ -102,7 +102,7 @@ const CreateTicket = () => {
             disabled={isSubmitting}
             className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 rounded-lg transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isSubmitting ? "Submitting..." : "Create Ticket"}
+            {isSubmitting ? "Creando..." : "Crear"}
           </button>
         </form>
       </div>

@@ -1,4 +1,7 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 body {
@@ -11,7 +14,7 @@ body {
 }
 
 .btn-primary {
-  @apply bg-primary hover:bg-opacity-90 text-text-dark focus:ring-primary;
+  @apply bg-blue-800 hover:bg-opacity-90 text-text-dark focus:ring-blue-600;
 }
 
 .btn-secondary {
@@ -23,7 +26,7 @@ body {
 }
 
 .input {
-  @apply block w-full px-4 py-2.5 rounded-lg border-2 border-secondary bg-background-light-ui dark:bg-background-dark text-text-light dark:text-text-dark focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200;
+  @apply block w-full px-4 py-2.5 rounded-lg border-2 border-blue-900 bg-background-light-ui dark:bg-background-dark text-text-light dark:text-text-dark focus:ring-2 focus:ring-blue-700 focus:border-blue-700 transition-all duration-200;
 }
 
 .container-custom {

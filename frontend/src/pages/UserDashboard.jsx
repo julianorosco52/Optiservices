@@ -89,27 +89,27 @@ const UserDashboard = () => {
 
   const StatusBadge = ({ status }) => {
     const statusConfig = {
-      Open: {
+      Abierto: {
         icon: <Clock className="h-4 w-4 mr-1" />,
-        label: "Open",
+        label: "Abierto",
         class:
           "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300",
       },
-      "In Progress": {
+      "En curso": {
         icon: <AlertTriangle className="h-4 w-4 mr-1" />,
-        label: "In Progress",
-        class:
+        label: "En curso",
+        class:  
           "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300",
       },
-      Closed: {
+      Cerrado: {
         icon: <CheckCircle2 className="h-4 w-4 mr-1" />,
-        label: "Closed",
+        label: "Cerrado",
         class:
           "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300",
       },
     };
 
-    const config = statusConfig[status] || statusConfig.Open;
+    const config = statusConfig[status] || statusConfig["Abierto"];
 
     return (
       <span
@@ -126,11 +126,11 @@ const UserDashboard = () => {
       <div className="container-custom py-8">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
-              My Support Tickets
+            <h1 className="text-2xl md:text-3xl font-bold text-blue-800 dark:text-white">
+              Mis reportes
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mt-1">
-              Track and manage your support requests
+              Realice un seguimiento y control de sus reportes fácilmente.
             </p>
           </div>
           <Link
@@ -138,7 +138,7 @@ const UserDashboard = () => {
             className="btn btn-primary mt-4 sm:mt-0 inline-flex items-center"
           >
             <PlusCircle className="h-5 w-5 mr-1" />
-            New Ticket
+            Nuevo Ticket
           </Link>
         </div>
 
@@ -151,7 +151,7 @@ const UserDashboard = () => {
               <input
                 type="text"
                 className="input pl-10"
-                placeholder="Search tickets..."
+                placeholder="     Buscar tickets..."
                 value={searchTerm}
                 onChange={handleSearchChange}
               />
@@ -163,10 +163,10 @@ const UserDashboard = () => {
                 value={filterStatus}
                 onChange={handleFilterChange}
               >
-                <option value="All">All Status</option>
-                <option value="Open">Open</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Closed">Closed</option>
+                <option value="Estados">Estados</option>
+                <option value="Abierto">Abierto</option>
+                <option value="En curso">En curso</option>
+                <option value="Cerrado">Cerrado</option>
               </select>
             </div>
           </div>
@@ -196,11 +196,11 @@ const UserDashboard = () => {
               </svg>
             </div>
             <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-2">
-              No tickets found
+              No se encontraron tickets
             </h3>
             <p className="text-gray-600 dark:text-gray-400 mb-5">
               {searchTerm || filterStatus !== "all"
-                ? "Try adjusting your filters"
+                ? "Intente buscar por filtro"
                 : "You don't have any support tickets yet"}
             </p>
             <Link
@@ -208,7 +208,7 @@ const UserDashboard = () => {
               className="btn btn-primary inline-flex items-center"
             >
               <PlusCircle className="h-5 w-5 mr-1" />
-              Create New Ticket
+              Crear nuevo ticket
             </Link>
           </div>
         ) : (
@@ -227,19 +227,19 @@ const UserDashboard = () => {
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
                     >
-                      Status
+                      Estado
                     </th>
                     <th
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
                     >
-                      Date
+                      Fecha
                     </th>
                     <th
                       scope="col"
                       className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
                     >
-                      Actions
+                      Acciones
                     </th>
                   </tr>
                 </thead>
@@ -276,7 +276,7 @@ const UserDashboard = () => {
                             to={`/tickets/${ticket._id}`}
                             className="text-blue-500 hover:underline mr-4"
                           >
-                            View
+                            Ver detalles
                           </Link>
                           <button
                             onClick={() => handleDeleteTicket(ticket._id)}
@@ -300,17 +300,17 @@ const UserDashboard = () => {
             disabled={page === 1}
             className="bg-gray-700 text-white p-2 rounded-lg border border-gray-600 mr-2"
           >
-            Previous
+            Anterior
           </button>
           <span className="p-2">
-            Page {page} of {totalPages}
+            Pagina  {page} de {totalPages}
           </span>
           <button
             onClick={() => setPage(page + 1)}
             disabled={page === totalPages}
             className="bg-gray-700 text-white p-2 rounded-lg border border-gray-600 ml-2"
           >
-            Next
+            Siguiente
           </button>
         </div>
       </div>

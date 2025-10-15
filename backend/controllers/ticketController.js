@@ -51,7 +51,7 @@ export async function getTicketById (req, res) {
     res.json({ ticket, comments });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Error de servidor" });
   }
 }
 
@@ -63,19 +63,19 @@ export async function createTicket (req, res) {
     res.status(201).json(ticket);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Error de servidor" });
   }
 }
 
 export async function updateTicket (req, res) {
   try {
     if (req.user.role !== "admin") {
-      return res.status(403).json({ message: "Forbidden" });
+      return res.status(403).json({ message: "Prohibido" });
     }
 
     const { status } = req.body;
-    if (!["Open", "In Progress", "Closed"].includes(status)) {
-      return res.status(400).json({ message: "Invalid status" });
+    if (!["Abierto", "En curso", "Cerrado"].includes(status)) {
+      return res.status(400).json({ message: "Ticket no encontrado" });
     }
 
     const ticket = await Ticket.findByIdAndUpdate(
@@ -85,14 +85,14 @@ export async function updateTicket (req, res) {
     );
 
     if (!ticket) {
-      return res.status(404).json({ message: "Ticket not found" });
+      return res.status(404).json({ message: "Ticket no encontrado" });
     }
 
     req.io.emit("ticket:updated", ticket);
     res.json(ticket);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Error de servidor" });
   }
 }
 
@@ -101,35 +101,35 @@ export async function deleteTicket (req, res) {
     const ticket = await Ticket.findById(req.params.id);
 
     if (!ticket) {
-      return res.status(404).json({ message: "Ticket not found" });
+      return res.status(404).json({ message: "Ticket no encontrado" });
     }
 
     if (ticket.userId.toString() !== req.user.id) {
       return res.status(403).json({
-        message: "Unauthorized: You can only delete your own tickets"
+        message: "No autorizado: Solo puedes eliminar tus propios tickets"
       });
     }
 
     await Ticket.findByIdAndDelete(req.params.id);
     req.io.emit("ticket:deleted", req.params.id);
-    res.json({ message: "Ticket deleted successfully" });
+    res.json({ message: "Ticket eliminado exitosamente" });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Error de servidor" });
   }
 }
 
 export async function assignTicket (req, res) {
   try {
     if (req.user.role !== "admin") {
-      return res.status(403).json({ message: "Forbidden" });
+      return res.status(403).json({ message: "Prohibido" });
     }
 
     const { adminId } = req.body;
 
     const adminUser = await User.findById(adminId);
     if (!adminUser || adminUser.role !== "admin") {
-      return res.status(400).json({ message: "Invalid adminId" });
+      return res.status(400).json({ message: "ID de administrador no válido" });
     }
 
     const ticket = await Ticket.findByIdAndUpdate(
@@ -139,14 +139,14 @@ export async function assignTicket (req, res) {
     );
 
     if (!ticket) {
-      return res.status(404).json({ message: "Ticket not found" });
+      return res.status(404).json({ message: "Ticket no encontrado" });
     }
 
     req.io.emit("ticket:assigned", ticket);
     res.json(ticket);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Error de servidor" });
   }
 }
 
@@ -167,6 +167,6 @@ export async function addComment (req, res) {
     res.status(201).json(populatedComment);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Error de servidor" });
   }
 }

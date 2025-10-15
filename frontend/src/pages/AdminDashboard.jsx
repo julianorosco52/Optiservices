@@ -32,9 +32,9 @@ const AdminDashboard = () => {
   const { tickets } = useSelector((state) => state.tickets);
   const [stats, setStats] = useState({
     total: 0,
-    open: 0,
-    inProgress: 0,
-    closed: 0,
+    abierto: 0,
+    enCurso: 0,
+    cerrado: 0,
   });
   const [admins, setAdmins] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -79,10 +79,10 @@ const AdminDashboard = () => {
   }, [page, filterStatus, searchTerm, dispatch]);
 
   useEffect(() => {
-    const open = tickets.filter((t) => t.status === "Open").length;
-    const inProgress = tickets.filter((t) => t.status === "In Progress").length;
-    const closed = tickets.filter((t) => t.status === "Closed").length;
-    setStats({ total: tickets.length, open, inProgress, closed });
+    const abierto = tickets.filter((t) => t.status === "Abierto").length;
+    const enCurso = tickets.filter((t) => t.status === "En curso").length;
+    const cerrado = tickets.filter((t) => t.status === "Cerrado").length;
+    setStats({ total: tickets.length, abierto, enCurso, cerrado });
   }, [tickets]);
 
   const handleAssignTicket = async (ticketId, adminId) => {
@@ -102,9 +102,9 @@ const AdminDashboard = () => {
   };
 
   const chartData = [
-    { name: "Open", count: stats.open },
-    { name: "In Progress", count: stats.inProgress },
-    { name: "Closed", count: stats.closed },
+    { name: "Abierto", count: stats.abierto },
+    { name: "En curso", count: stats.enCurso },
+    { name: "Cerrado", count: stats.cerrado },
   ];
 
   const StatCard = ({ icon, label, value, color }) => (
@@ -124,33 +124,33 @@ const AdminDashboard = () => {
   return (
     <div className="bg-gray-50 dark:bg-gray-900 min-h-screen pb-12">
       <div className="container-custom py-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
-          Admin Dashboard
+        <h1 className="text-3xl font-bold text-blue-800 dark:text-white mb-6">
+          Panel de administrador
         </h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <StatCard
             icon={<TicketIcon className="h-6 w-6 text-blue-600" />}
-            label="Total Tickets"
+            label="Total de tickets"
             value={stats.total}
             color="bg-blue-100 dark:bg-blue-900/30"
           />
           <StatCard
             icon={<Clock className="h-6 w-6 text-yellow-600" />}
-            label="Open"
-            value={stats.open}
+            label="Abierto"
+            value={stats.abierto}
             color="bg-yellow-100 dark:bg-yellow-900/30"
           />
           <StatCard
             icon={<AlertTriangle className="h-6 w-6 text-orange-600" />}
-            label="In Progress"
-            value={stats.inProgress}
+            label="En curso"
+            value={stats.enCurso}
             color="bg-orange-100 dark:bg-orange-900/30"
           />
           <StatCard
             icon={<CheckCircle2 className="h-6 w-6 text-green-600" />}
-            label="Closed"
-            value={stats.closed}
+            label="Cerrado"
+            value={stats.cerrado}
             color="bg-green-100 dark:bg-green-900/30"
           />
         </div>
@@ -159,7 +159,7 @@ const AdminDashboard = () => {
           <div className="lg:col-span-2 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
             <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
               <BarChart className="h-6 w-6 mr-2" />
-              Ticket Status Overview
+              Descripción general del estado del ticket
             </h2>
             <ResponsiveContainer width="100%" height={300}>
               <RechartsBarChart data={chartData}>
@@ -186,9 +186,10 @@ const AdminDashboard = () => {
                 <Legend iconType="circle" iconSize={10} />
                 <Bar
                   dataKey="count"
-                  fill="#4f46e5"
+                  fill="#1E63C9"
                   name="Tickets"
                   radius={[4, 4, 0, 0]}
+                  barSize={80}
                 />
               </RechartsBarChart>
             </ResponsiveContainer>
@@ -196,7 +197,7 @@ const AdminDashboard = () => {
           <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
             <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
               <Users className="h-6 w-6 mr-2" />
-              Admins
+              Administradores
             </h2>
             <ul className="space-y-3">
               {admins.map((admin) => (
@@ -225,7 +226,7 @@ const AdminDashboard = () => {
               <input
                 type="text"
                 className="input pl-10"
-                placeholder="Search tickets..."
+                placeholder="     Buscar tickets..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -237,10 +238,10 @@ const AdminDashboard = () => {
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
               >
-                <option value="All">All Status</option>
-                <option value="Open">Open</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Closed">Closed</option>
+                <option value="Estados">Estados</option>
+                <option value="Abierto">Abierto</option>
+                <option value="En curso">En curso</option>
+                <option value="Cerrado">Cerrado</option>
               </select>
             </div>
           </div>
@@ -255,13 +256,13 @@ const AdminDashboard = () => {
                     Ticket
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Status
+                    Estado
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Assigned To
+                    Asignado a
                   </th>
                   <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Actions
+                    Comportamiento
                   </th>
                 </tr>
               </thead>
@@ -287,9 +288,9 @@ const AdminDashboard = () => {
                         }
                         className="input text-sm"
                       >
-                        <option>Open</option>
-                        <option>In Progress</option>
-                        <option>Closed</option>
+                        <option>Abierto</option>
+                        <option>En curso</option>
+                        <option>Cerrado</option>
                       </select>
                     </td>
                     <td className="px-6 py-4">
@@ -300,7 +301,7 @@ const AdminDashboard = () => {
                         }
                         className="input text-sm"
                       >
-                        <option value="">Unassigned</option>
+                        <option value="">Sin asignar</option>
                         {admins.map((admin) => (
                           <option key={admin._id} value={admin._id}>
                             {admin.username}
@@ -313,7 +314,7 @@ const AdminDashboard = () => {
                         href={`/tickets/${ticket._id}`}
                         className="text-blue-500 hover:underline"
                       >
-                        View
+                        Ver detalles
                       </a>
                     </td>
                   </tr>
@@ -328,17 +329,17 @@ const AdminDashboard = () => {
             disabled={page === 1}
             className="bg-gray-700 text-white p-2 rounded-lg border border-gray-600 mr-2"
           >
-            Previous
+            Anterior
           </button>
           <span className="p-2">
-            Page {page} of {totalPages}
+            Pagina  {page} de {totalPages}
           </span>
           <button
             onClick={() => setPage(page + 1)}
             disabled={page === totalPages}
             className="bg-gray-700 text-white p-2 rounded-lg border border-gray-600 ml-2"
           >
-            Next
+            Siguiente
           </button>
         </div>
       </div>

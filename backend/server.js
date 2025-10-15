@@ -37,11 +37,11 @@ const io = new Server(server, {
 io.use((socket, next) => {
   const token = socket.handshake.auth.token;
   if (!token) {
-    return next(new Error("Authentication error"));
+    return next(new Error("Error de autenticación"));
   }
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
-      return next(new Error("Authentication error"));
+      return next(new Error("Error de autenticación"));
     }
     socket.user = decoded;
     next();
@@ -75,7 +75,7 @@ app.use("/api/tickets", ticketRoutes);
 app.use("/api/users", usersRoutes);
 
 app.get("/", (req, res) => {
-  res.send("API is running....");
+  res.send("La API se está ejecutando...");
 });
 
 io.on("connection", (socket) => {
@@ -86,4 +86,4 @@ io.on("connection", (socket) => {
 });
 
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+server.listen(PORT, () => console.log(`Servidor corriendo en puerto ${PORT}`));

@@ -1,12 +1,12 @@
 import { body } from "express-validator";
 
 export const createTicketValidation = [
-  body("title").notEmpty().withMessage("Title is required"),
-  body("description").notEmpty().withMessage("Description is required")
+  body("title").notEmpty().withMessage("Se requiere un Titulo"),
+  body("description").notEmpty().withMessage("Se requiere una Descripción")
 ];
 
 export const updateTicketValidation = [
-  body("status").isIn(["Open", "In Progress", "Closed"]).withMessage("Invalid status")
+  body("status").isIn(["Abierto", "En curso", "Cerrado"]).withMessage("Estado invalido")
 ];
 
 export const addCommentValidation = [

@@ -11,7 +11,7 @@ export async function signup (req, res) {
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(400).json({ message: "El usuario ya existe" });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -21,10 +21,10 @@ export async function signup (req, res) {
 
     await user.save();
 
-    res.status(201).json({ message: "User registered successfully" });
+    res.status(201).json({ message: "Usuario registrado exitosamente!" });
   } catch (error) {
     console.error("Error during signup:", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Error interno del servidor" });
   }
 }
 
@@ -34,12 +34,12 @@ export async function login (req, res) {
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res.status(401).json({ message: "Credenciales invalidas" });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res.status(401).json({ message: "Credenciales invalidas" });
     }
 
     const token = jwt.sign(
@@ -55,7 +55,7 @@ export async function login (req, res) {
 
     res.json({ token, role: user.role });
   } catch (error) {
-    console.error("Error during login:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("Error durante el inicio de sesión: ", error);
+    res.status(500).json({ message: "Error interno del servidor" });
   }
 }

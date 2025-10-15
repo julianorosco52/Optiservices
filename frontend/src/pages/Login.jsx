@@ -73,11 +73,11 @@ const Login = () => {
     <div className="bg-background-light dark:bg-background-dark min-h-[calc(100vh-4rem)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 animate-fade-in animate-slide-up">
         <div className="text-center">
-          <h2 className="text-3xl font-bold text-text-light dark:text-text-dark">
-            Welcome Back
+          <h2 className="text-3xl font-bold text-blue-800 dark:text-text-dark">
+            Bienvenido de nuevo
           </h2>
-          <p className="mt-2 text-text-muted">
-            Sign in to your account to continue
+          <p className="mt-2 text-gray-500">
+            Inicia sesión en tu cuenta para continuar
           </p>
         </div>
 
@@ -95,7 +95,7 @@ const Login = () => {
                 htmlFor="email"
                 className="block text-sm font-medium text-text-muted mb-1"
               >
-                Email Address
+                Dirección de correo electrónico
               </label>
               <input
                 id="email"
@@ -106,7 +106,7 @@ const Login = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className={`input ${errors.email ? "border-accent-error" : ""}`}
-                placeholder="you@example.com"
+                placeholder="tu@ejemplo.com"
               />
               {errors.email && (
                 <p className="text-accent-error text-xs mt-1">{errors.email}</p>
@@ -118,7 +118,7 @@ const Login = () => {
                 htmlFor="password"
                 className="block text-sm font-medium text-text-muted mb-1"
               >
-                Password
+                Contraseña
               </label>
               <div className="relative">
                 <input
@@ -132,11 +132,11 @@ const Login = () => {
                   className={`input pr-10 ${
                     errors.password ? "border-accent-error" : ""
                   }`}
-                  placeholder="••••••••"
+                  placeholder="•••••••••"
                 />
                 <button
                   type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-text-muted hover:text-primary"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-text-muted hover:text-blue-600"
                   onClick={togglePasswordVisibility}
                 >
                   {showPassword ? (
@@ -159,26 +159,16 @@ const Login = () => {
                   id="remember-me"
                   name="remember-me"
                   type="checkbox"
-                  className="h-4 w-4 text-primary focus:ring-primary border-secondary rounded"
+                  className="h-4 w-4 text-blue-700 focus:ring-blue-700 border-blue rounded"
                 />
                 <label
                   htmlFor="remember-me"
                   className="ml-2 block text-sm text-text-muted"
                 >
-                  Remember me
+                  Recordar datos
                 </label>
               </div>
-
-              <div className="text-sm">
-                <a
-                  href="#"
-                  className="font-medium text-primary hover:text-opacity-80"
-                >
-                  Forgot password?
-                </a>
-              </div>
             </div>
-
             <div>
               <button
                 type="submit"
@@ -209,18 +199,18 @@ const Login = () => {
                 ) : (
                   <LogIn className="h-5 w-5 mr-2" />
                 )}
-                {loading ? "Signing in..." : "Sign in"}
+                {loading ? "Signing in..." : "Iniciar sesión"}
               </button>
             </div>
           </form>
 
           <p className="text-center text-sm text-text-muted mt-6">
-            Don't have an account?{" "}
+            ¿No tienes cuenta?{" "}
             <Link
               to="/signup"
-              className="font-medium text-primary hover:text-opacity-80"
+              className="font-medium text-blue-400 hover:text-opacity-80"
             >
-              Sign up now
+              Regístrate ahora
             </Link>
           </p>
         </div>

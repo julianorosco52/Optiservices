@@ -38,9 +38,9 @@ const App = () => {
               element={
                 <div className="flex items-center justify-center min-h-[calc(100vh-4rem)] bg-gray-50 dark:bg-gray-900">
                   <div className="text-center max-w-md mx-auto px-4">
-                    <h1 className="text-6xl font-bold text-indigo-600 dark:text-indigo-400">404</h1>
-                    <h2 className="mt-4 text-2xl font-bold text-gray-900 dark:text-white">Page Not Found</h2>
-                    <p className="mt-2 text-gray-600 dark:text-gray-400">Sorry, the page you are looking for doesn't exist or has been moved.</p>
+                    <h1 className="text-6xl font-bold text-blue-800 dark:text-white">404</h1>
+                    <h2 className="mt-4 text-2xl font-bold text-blue-800 dark:text-white">Página no encontrada</h2>
+                    <p className="mt-2 text-gray-600 dark:text-gray-400">Ups! la página que estás buscando no existe o ha sido movida.</p>
                   </div>
                 </div>
               }

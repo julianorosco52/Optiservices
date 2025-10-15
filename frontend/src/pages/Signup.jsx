@@ -66,11 +66,11 @@ const Signup = () => {
     <div className="bg-background-light dark:bg-background-dark min-h-[calc(100vh-4rem)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 animate-fade-in animate-slide-up">
         <div className="text-center">
-          <h2 className="text-3xl font-bold text-text-light dark:text-text-dark">
-            Create an Account
+          <h2 className="text-3xl font-bold text-blue-800 dark:text-text-dark">
+            Crear una cuenta
           </h2>
-          <p className="mt-2 text-text-muted">
-            Get started with your new account
+          <p className="mt-2 text-gray-500">
+            Acceda con su nueva cuenta
           </p>
         </div>
 
@@ -89,14 +89,13 @@ const Signup = () => {
           <form onSubmit={handleSubmit} className="space-y-4" noValidate>
             <div>
               <label className="block text-sm font-medium text-text-muted mb-1">
-                Username
+                Nombre de usuario
               </label>
               <input
                 type="text"
                 name="username"
-                className={`input ${
-                  errors.username ? "border-accent-error" : ""
-                }`}
+                className={`input ${errors.username ? "border-accent-error" : ""
+                  }`}
                 value={formData.username}
                 onChange={handleChange}
                 required
@@ -110,7 +109,7 @@ const Signup = () => {
 
             <div>
               <label className="block text-sm font-medium text-text-muted mb-1">
-                Email
+                Correo electrónico
               </label>
               <input
                 type="email"
@@ -127,14 +126,13 @@ const Signup = () => {
 
             <div>
               <label className="block text-sm font-medium text-text-muted mb-1">
-                Password
+                Contraseña
               </label>
               <input
                 type="password"
                 name="password"
-                className={`input ${
-                  errors.password ? "border-accent-error" : ""
-                }`}
+                className={`input ${errors.password ? "border-accent-error" : ""
+                  }`}
                 value={formData.password}
                 onChange={handleChange}
                 required
@@ -151,17 +149,17 @@ const Signup = () => {
               disabled={loading}
               className="btn btn-primary w-full flex justify-center items-center"
             >
-              {loading ? "Creating Account..." : "Create Account"}
+              {loading ? "Creando cuenta..." : "Crear cuenta"}
             </button>
           </form>
 
           <p className="text-sm text-center text-text-muted mt-6">
-            Already have an account?{" "}
+            ¿Ya tienes una cuenta?{" "}
             <Link
               to="/login"
-              className="font-medium text-primary hover:text-opacity-80"
+              className="font-medium text-blue-400 hover:text-opacity-80"
             >
-              Log In
+              Iniciar sesión
             </Link>
           </p>
         </div>

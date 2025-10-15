@@ -8,7 +8,7 @@ const router = express.Router();
 router.get("/admins", authMiddleware, async (req, res) => {
   try {
     if (req.user.role !== "admin") {
-      return res.status(403).json({ message: "Forbidden" });
+      return res.status(403).json({ message: "prohibido" });
     }
 
     const admins = await User.find({ role: "admin" }).select(
@@ -17,7 +17,7 @@ router.get("/admins", authMiddleware, async (req, res) => {
     res.json(admins);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Error de servidor" });
   }
 });
 
