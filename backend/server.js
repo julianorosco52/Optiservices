@@ -16,55 +16,49 @@ dotenv.config();
 const app = express();
 const server = http.createServer(app);
 
+
+// Configurar CORS
+
 const allowedOriginsEnv =
-  process.env.ALLOWED_ORIGINS || "http://localhost:5173";
+  process.env.ALLOWED_ORIGINS || "http://localhost:5173,https://optiservices.vercel.app";
 const allowedOrigins = allowedOriginsEnv.split(",").map((o) => o.trim());
 
+const corsOptions = {
+  origin: (origin, cb) => {
+    // Permitir requests sin origin (Postman, backend calls)
+    if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
+    return cb(new Error("Not allowed by CORS"));
+  },
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+};
+
+// Configurar Socket.io
+
 const io = new Server(server, {
-  cors: {
-    origin: (origin, cb) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        return cb(null, true);
-      }
-      return cb(new Error("Not allowed by CORS"));
-    },
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true
-  }
+  cors: corsOptions
 });
 
-// Socket.io middleware for authentication
 io.use((socket, next) => {
   const token = socket.handshake.auth.token;
-  if (!token) {
-    return next(new Error("Error de autenticación"));
-  }
+  if (!token) return next(new Error("Error de autenticación"));
+
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-    if (err) {
-      return next(new Error("Error de autenticación"));
-    }
+    if (err) return next(new Error("Error de autenticación"));
     socket.user = decoded;
     next();
   });
 });
 
+
+// Middlewares
+
 app.use(json());
-app.use(
-  cors({
-    origin: (origin, cb) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        return cb(null, true);
-      }
-      return cb(new Error("Not allowed by CORS"));
-    },
-    credentials: true
-  })
-);
+app.use(cors(corsOptions)); // CORS para REST API
 app.use(helmet());
 
 connectDB();
 
-// Make io accessible to routes
 app.use((req, res, next) => {
   req.io = io;
   next();
