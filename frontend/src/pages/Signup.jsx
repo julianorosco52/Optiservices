@@ -48,7 +48,7 @@ const Signup = () => {
     setLoading(true);
 
     try {
-      await api.post("/api/auth/signup", formData);
+      await api.post("/auth/signup", formData);
       setSuccess("Signup successful! Redirecting to login...");
       setTimeout(() => {
         navigate("/login");

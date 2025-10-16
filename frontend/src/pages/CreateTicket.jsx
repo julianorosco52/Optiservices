@@ -33,7 +33,7 @@ const CreateTicket = () => {
         return;
       }
 
-      const res = await api.post("/api/tickets", { title, description });
+      const res = await api.post("/tickets", { title, description });
 
       dispatch(createTicketSuccess(res.data));
       setTitle("");

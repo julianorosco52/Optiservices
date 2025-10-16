@@ -16,7 +16,7 @@ const TicketDetails = () => {
   useEffect(() => {
     const fetchTicketDetails = async () => {
       try {
-        const res = await api.get(`/api/tickets/${id}`);
+        const res = await api.get(`/tickets/${id}`);
         setTicket(res.data.ticket);
         setComments(res.data.comments);
         setIsLoading(false);
@@ -45,7 +45,7 @@ const TicketDetails = () => {
     e.preventDefault();
     if (!newComment.trim()) return;
     try {
-      await api.post(`/api/tickets/${id}/comments`, { text: newComment });
+      await api.post(`/tickets/${id}/comments`, { text: newComment });
       setNewComment("");
     } catch (err) {
       console.error(err);

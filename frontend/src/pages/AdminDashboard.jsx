@@ -47,9 +47,9 @@ const AdminDashboard = () => {
       try {
         const [ticketsRes, adminsRes] = await Promise.all([
           api.get(
-            `/api/tickets?page=${page}&limit=10&status=${filterStatus}&search=${searchTerm}`
+            `/tickets?page=${page}&limit=10&status=${filterStatus}&search=${searchTerm}`
           ),
-          api.get("/api/users/admins"),
+          api.get("/users/admins"),
         ]);
 
         dispatch(getTicketsSuccess(ticketsRes.data.tickets));
@@ -87,7 +87,7 @@ const AdminDashboard = () => {
 
   const handleAssignTicket = async (ticketId, adminId) => {
     try {
-      await api.put(`/api/tickets/${ticketId}/assign`, { adminId });
+      await api.put(`/tickets/${ticketId}/assign`, { adminId });
     } catch (err) {
       console.error(err);
     }
@@ -95,7 +95,7 @@ const AdminDashboard = () => {
 
   const handleUpdateStatus = async (ticketId, status) => {
     try {
-      await api.put(`/api/tickets/${ticketId}`, { status });
+      await api.put(`/tickets/${ticketId}`, { status });
     } catch (err) {
       console.error(err);
     }

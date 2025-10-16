@@ -33,7 +33,7 @@ const UserDashboard = () => {
     const fetchTickets = async () => {
       try {
         const res = await api.get(
-          `/api/tickets?page=${page}&limit=10&status=${filterStatus}&search=${searchTerm}`
+          `/tickets?page=${page}&limit=10&status=${filterStatus}&search=${searchTerm}`
         );
         dispatch(getTicketsSuccess(res.data.tickets));
         setTotalPages(res.data.totalPages);
@@ -70,7 +70,7 @@ const UserDashboard = () => {
 
   const handleDeleteTicket = async (id) => {
     try {
-      await api.delete(`/api/tickets/${id}`);
+      await api.delete(`/tickets/${id}`);
       dispatch(deleteTicketSuccess(id));
     } catch (err) {
       console.error(err);
