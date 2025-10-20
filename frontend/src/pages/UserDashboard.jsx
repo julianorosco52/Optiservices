@@ -176,7 +176,7 @@ const UserDashboard = () => {
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8 text-center">
             <div className="animate-spin h-10 w-10 border-4 border-indigo-500 border-t-transparent rounded-full mx-auto"></div>
             <p className="text-gray-600 dark:text-gray-400 mt-4">
-              Loading your tickets...
+              Cargando tus tickets...
             </p>
           </div>
         ) : tickets.length === 0 ? (
