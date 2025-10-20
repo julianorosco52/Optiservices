@@ -25,13 +25,19 @@ const allowedOrigins = allowedOriginsEnv.split(",").map((o) => o.trim());
 
 const corsOptions = {
   origin: (origin, cb) => {
-    // Permitir requests sin origin (Postman, backend calls)
-    if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
+    if (
+      !origin ||
+      allowedOrigins.includes(origin) ||
+      /vercel\.app$/.test(origin) // permite cualquier subdominio de vercel.app
+    ) {
+      return cb(null, true);
+    }
     return cb(new Error("Not allowed by CORS"));
   },
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 };
+
 
 // Configurar Socket.io
 
